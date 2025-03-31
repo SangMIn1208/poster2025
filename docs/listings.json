@@ -3,8 +3,8 @@
     "listing": "/index.html",
     "items": [
       "/posts/4.딥러닝적합.html",
-      "/posts/2.시각화및VAR적합.html",
       "/posts/3.granger논문읽기.html",
+      "/posts/2.시각화및VAR적합.html",
       "/posts/1.2024기상데이터전처리blog.html"
     ]
   }
