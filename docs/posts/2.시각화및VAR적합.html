@@ -9,7 +9,7 @@
 <meta name="author" content="이상민">
 <meta name="dcterms.date" content="2025-03-30">
 
-<title>2. 날씨 데이터 시각화 – poster2025</title>
+<title>2. 시각화 및 VAR 적합 – poster2025</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -181,7 +181,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">2. 날씨 데이터 시각화</h1>
+      <h1 class="title">2. 시각화 및 VAR 적합</h1>
                       </div>
   </div>
     
@@ -556,7 +556,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>]]</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> wt.iloc[<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>:<span class="dv">24</span><span class="op">*</span><span class="dv">15</span>,<span class="dv">1</span>:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-16" class="cell" data-execution_count="44">
+<div id="cell-16" class="cell" data-execution_count="63">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.api <span class="im">import</span> VAR</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 데이터: y, x1~x4가 있는 시계열 데이터프레임</span></span>
@@ -576,23 +576,23 @@ window.Quarto = {
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit(lag)</span>
 <span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#print(results.summary())</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>AIC 기준 최적 시차: 21</code></pre>
+<pre><code>AIC 기준 최적 시차: 20</code></pre>
 </div>
 </div>
-<div id="cell-17" class="cell" data-execution_count="45">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">21</span></span>
+<div id="cell-17" class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">24</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>forecast_input <span class="op">=</span> X.values[<span class="op">-</span>lag:]  <span class="co"># 최근 lag만큼의 데이터 사용</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>forecast1 <span class="op">=</span> results.forecast(y<span class="op">=</span>forecast_input, steps<span class="op">=</span>n_forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li>습도와 일사량</li>
 </ol>
-<div id="cell-19" class="cell" data-execution_count="46">
+<div id="cell-19" class="cell" data-execution_count="65">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="op">-</span><span class="dv">2</span>,<span class="op">-</span><span class="dv">1</span>]]</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#y = wt.iloc[24*7:24*8,1:]</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> VAR(X)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="op">-</span><span class="dv">0</span></span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 시차 선택</span></span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>lag_result <span class="op">=</span> model.select_order(maxlags<span class="op">=</span><span class="dv">24</span>)</span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"AIC 기준 최적 시차:"</span>, lag_result.selected_orders[<span class="st">'aic'</span>])</span>
@@ -604,13 +604,13 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>AIC 기준 최적 시차: 21</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="46">
+<div class="cell-output cell-output-display" data-execution_count="65">
 <pre><code>  Summary of Regression Results   
 ==================================
 Model:                         VAR
 Method:                        OLS
 Date:           Mon, 31, Mar, 2025
-Time:                     08:39:30
+Time:                     10:24:45
 --------------------------------------------------------------------
 No. of Equations:         2.00000    BIC:                  0.0867873
 Nobs:                     315.000    HQIC:                 -0.528393
@@ -722,15 +722,15 @@ sol   -0.387709  1.000000
 </code></pre>
 </div>
 </div>
-<div id="cell-20" class="cell" data-execution_count="47">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">21</span></span>
+<div id="cell-20" class="cell" data-execution_count="66">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">24</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>forecast_input <span class="op">=</span> X.values[<span class="op">-</span>lag:]  <span class="co"># 최근 lag만큼의 데이터 사용</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>forecast2 <span class="op">=</span> results.forecast(y<span class="op">=</span>forecast_input, steps<span class="op">=</span>n_forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="3" type="1">
 <li>풍속과 일사량</li>
 </ol>
-<div id="cell-22" class="cell" data-execution_count="48">
+<div id="cell-22" class="cell" data-execution_count="67">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="op">-</span><span class="dv">3</span>,<span class="op">-</span><span class="dv">1</span>]]</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#y = wt.iloc[24*7:24*8,1:]</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -745,7 +745,7 @@ sol   -0.387709  1.000000
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit(lag)</span>
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>results.summary()</span>
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">21</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">24</span></span>
 <span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>forecast_input <span class="op">=</span> X.values[<span class="op">-</span>lag:]  <span class="co"># 최근 lag만큼의 데이터 사용</span></span>
 <span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>forecast2_ <span class="op">=</span> results.forecast(y<span class="op">=</span>forecast_input, steps<span class="op">=</span>n_forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -755,7 +755,7 @@ sol   -0.387709  1.000000
 <ol start="4" type="1">
 <li>강수량과 일사량</li>
 </ol>
-<div id="cell-24" class="cell" data-execution_count="49">
+<div id="cell-24" class="cell" data-execution_count="68">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="op">-</span><span class="dv">4</span>,<span class="op">-</span><span class="dv">1</span>]]</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#y = wt.iloc[24*7:24*8,1:]</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -770,7 +770,7 @@ sol   -0.387709  1.000000
 <span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit(lag)</span>
 <span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>results.summary()</span>
 <span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">21</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">24</span></span>
 <span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>forecast_input <span class="op">=</span> X.values[<span class="op">-</span>lag:]  <span class="co"># 최근 lag만큼의 데이터 사용</span></span>
 <span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>forecast3_ <span class="op">=</span> results.forecast(y<span class="op">=</span>forecast_input, steps<span class="op">=</span>n_forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -780,7 +780,7 @@ sol   -0.387709  1.000000
 <ul>
 <li>AR 모형 일사량만 이용</li>
 </ul>
-<div id="cell-26" class="cell" data-execution_count="50">
+<div id="cell-26" class="cell" data-execution_count="71">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.ar_model <span class="im">import</span> AutoReg</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 예시: y 시계열 데이터프레임 (datetime index 권장)</span></span>
@@ -789,7 +789,7 @@ sol   -0.387709  1.000000
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>y_ <span class="op">=</span> wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="op">-</span><span class="dv">1</span>]]<span class="co"># 시계열 형태로 가져오기</span></span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 시차(p) 설정 또는 자동 선택</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="dv">21</span>  <span class="co"># 최근 24시간을 기반으로 다음을 예측한다고 가정</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="dv">24</span>  <span class="co"># 최근 24시간을 기반으로 다음을 예측한다고 가정</span></span>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. AR 모형 적합</span></span>
 <span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AutoReg(y_, lags<span class="op">=</span>p, old_names<span class="op">=</span><span class="va">False</span>)</span>
@@ -798,7 +798,7 @@ sol   -0.387709  1.000000
 <span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 다음 24시간 예측</span></span>
 <span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>forecast3 <span class="op">=</span> results.predict(start<span class="op">=</span><span class="bu">len</span>(y), end<span class="op">=</span><span class="bu">len</span>(y)<span class="op">+</span><span class="dv">23</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-27" class="cell" data-execution_count="51">
+<div id="cell-27" class="cell" data-execution_count="72">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'온도, 일사량'</span>,mean_squared_error(y[<span class="st">'sol'</span>].values,forecast1[:,<span class="dv">1</span>]))</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'습도, 일사량'</span>,mean_squared_error(y[<span class="st">'sol'</span>].values,forecast2[:,<span class="dv">1</span>]))</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'풍속, 일사량'</span>,mean_squared_error(y[<span class="st">'sol'</span>].values,forecast2_[:,<span class="dv">1</span>]))</span>
@@ -818,66 +818,18 @@ sol   -0.387709  1.000000
 <span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>plt.plot(forecast3.values,label <span class="op">=</span> <span class="st">'sol'</span>)</span>
 <span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
 <span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[51], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> <span style="color:rgb(0,135,0)">print</span>(<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">온도, 일사량</span><span style="color:rgb(175,0,0)">'</span>,<span class="ansi-yellow-bg">mean_squared_error</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">y</span><span class="ansi-yellow-bg">[</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">'</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">sol</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">'</span><span class="ansi-yellow-bg">]</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">values</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg">forecast1</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">:</span><span class="ansi-yellow-bg">,</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">1</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">)</span>)
-<span class="ansi-green-fg ansi-bold">      2</span> <span style="color:rgb(0,135,0)">print</span>(<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">습도, 일사량</span><span style="color:rgb(175,0,0)">'</span>,mean_squared_error(y[<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">sol</span><span style="color:rgb(175,0,0)">'</span>]<span style="color:rgb(98,98,98)">.</span>values,forecast2[:,<span style="color:rgb(98,98,98)">1</span>]))
-<span class="ansi-green-fg ansi-bold">      3</span> <span style="color:rgb(0,135,0)">print</span>(<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">풍속, 일사량</span><span style="color:rgb(175,0,0)">'</span>,mean_squared_error(y[<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">sol</span><span style="color:rgb(175,0,0)">'</span>]<span style="color:rgb(98,98,98)">.</span>values,forecast2_[:,<span style="color:rgb(98,98,98)">1</span>]))
-
-File <span class="ansi-green-fg">~/anaconda3/envs/pypy/lib/python3.10/site-packages/sklearn/utils/_param_validation.py:213</span>, in <span class="ansi-cyan-fg">validate_params.&lt;locals&gt;.decorator.&lt;locals&gt;.wrapper</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
-<span class="ansi-green-fg ansi-bold">    207</span> <span style="font-weight:bold;color:rgb(0,135,0)">try</span>:
-<span class="ansi-green-fg ansi-bold">    208</span>     <span style="font-weight:bold;color:rgb(0,135,0)">with</span> config_context(
-<span class="ansi-green-fg ansi-bold">    209</span>         skip_parameter_validation<span style="color:rgb(98,98,98)">=</span>(
-<span class="ansi-green-fg ansi-bold">    210</span>             prefer_skip_nested_validation <span style="font-weight:bold;color:rgb(175,0,255)">or</span> global_skip_validation
-<span class="ansi-green-fg ansi-bold">    211</span>         )
-<span class="ansi-green-fg ansi-bold">    212</span>     ):
-<span class="ansi-green-fg">--&gt; 213</span>         <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">func</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">    214</span> <span style="font-weight:bold;color:rgb(0,135,0)">except</span> InvalidParameterError <span style="font-weight:bold;color:rgb(0,135,0)">as</span> e:
-<span class="ansi-green-fg ansi-bold">    215</span>     <span style="font-style:italic;color:rgb(95,135,135)"># When the function is just a wrapper around an estimator, we allow</span>
-<span class="ansi-green-fg ansi-bold">    216</span>     <span style="font-style:italic;color:rgb(95,135,135)"># the function to delegate validation to the estimator, but we replace</span>
-<span class="ansi-green-fg ansi-bold">    217</span>     <span style="font-style:italic;color:rgb(95,135,135)"># the name of the estimator by the name of the function in the error</span>
-<span class="ansi-green-fg ansi-bold">    218</span>     <span style="font-style:italic;color:rgb(95,135,135)"># message to avoid confusion.</span>
-<span class="ansi-green-fg ansi-bold">    219</span>     msg <span style="color:rgb(98,98,98)">=</span> re<span style="color:rgb(98,98,98)">.</span>sub(
-<span class="ansi-green-fg ansi-bold">    220</span>         <span style="color:rgb(175,0,0)">r</span><span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">parameter of </span><span style="color:rgb(175,0,0)">\</span><span style="color:rgb(175,0,0)">w+ must be</span><span style="color:rgb(175,0,0)">"</span>,
-<span class="ansi-green-fg ansi-bold">    221</span>         <span style="color:rgb(175,0,0)">f</span><span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">parameter of </span><span style="font-weight:bold;color:rgb(175,95,135)">{</span>func<span style="color:rgb(98,98,98)">.</span><span style="color:rgb(0,0,135)">__qualname__</span><span style="font-weight:bold;color:rgb(175,95,135)">}</span><span style="color:rgb(175,0,0)"> must be</span><span style="color:rgb(175,0,0)">"</span>,
-<span class="ansi-green-fg ansi-bold">    222</span>         <span style="color:rgb(0,135,0)">str</span>(e),
-<span class="ansi-green-fg ansi-bold">    223</span>     )
-
-File <span class="ansi-green-fg">~/anaconda3/envs/pypy/lib/python3.10/site-packages/sklearn/metrics/_regression.py:497</span>, in <span class="ansi-cyan-fg">mean_squared_error</span><span class="ansi-blue-fg">(y_true, y_pred, sample_weight, multioutput, squared)</span>
-<span class="ansi-green-fg ansi-bold">    492</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="font-weight:bold;color:rgb(175,0,255)">not</span> squared:
-<span class="ansi-green-fg ansi-bold">    493</span>         <span style="font-weight:bold;color:rgb(0,135,0)">return</span> root_mean_squared_error(
-<span class="ansi-green-fg ansi-bold">    494</span>             y_true, y_pred, sample_weight<span style="color:rgb(98,98,98)">=</span>sample_weight, multioutput<span style="color:rgb(98,98,98)">=</span>multioutput
-<span class="ansi-green-fg ansi-bold">    495</span>         )
-<span class="ansi-green-fg">--&gt; 497</span> y_type, y_true, y_pred, multioutput <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">_check_reg_targets</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-fg ansi-bold">    498</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">y_true</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">y_pred</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">multioutput</span>
-<span class="ansi-green-fg ansi-bold">    499</span> <span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">    500</span> check_consistent_length(y_true, y_pred, sample_weight)
-<span class="ansi-green-fg ansi-bold">    501</span> output_errors <span style="color:rgb(98,98,98)">=</span> np<span style="color:rgb(98,98,98)">.</span>average((y_true <span style="color:rgb(98,98,98)">-</span> y_pred) <span style="color:rgb(98,98,98)">*</span><span style="color:rgb(98,98,98)">*</span> <span style="color:rgb(98,98,98)">2</span>, axis<span style="color:rgb(98,98,98)">=</span><span style="color:rgb(98,98,98)">0</span>, weights<span style="color:rgb(98,98,98)">=</span>sample_weight)
-
-File <span class="ansi-green-fg">~/anaconda3/envs/pypy/lib/python3.10/site-packages/sklearn/metrics/_regression.py:102</span>, in <span class="ansi-cyan-fg">_check_reg_targets</span><span class="ansi-blue-fg">(y_true, y_pred, multioutput, dtype)</span>
-<span class="ansi-green-fg ansi-bold">     68</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span> <span style="color:rgb(0,0,255)">_check_reg_targets</span>(y_true, y_pred, multioutput, dtype<span style="color:rgb(98,98,98)">=</span><span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">numeric</span><span style="color:rgb(175,0,0)">"</span>):
-<span class="ansi-green-fg ansi-bold">     69</span> <span style="color:rgb(188,188,188)">    </span><span style="font-style:italic;color:rgb(175,0,0)">"""Check that y_true and y_pred belong to the same regression task.</span>
-<span class="ansi-green-fg ansi-bold">     70</span> 
-<span class="ansi-green-fg ansi-bold">     71</span> <span style="font-style:italic;color:rgb(175,0,0)">    Parameters</span>
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-fg ansi-bold">    100</span> <span style="font-style:italic;color:rgb(175,0,0)">        correct keyword.</span>
-<span class="ansi-green-fg ansi-bold">    101</span> <span style="font-style:italic;color:rgb(175,0,0)">    """</span>
-<span class="ansi-green-fg">--&gt; 102</span>     <span class="ansi-yellow-bg">check_consistent_length</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">y_true</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">y_pred</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">    103</span>     y_true <span style="color:rgb(98,98,98)">=</span> check_array(y_true, ensure_2d<span style="color:rgb(98,98,98)">=</span><span style="font-weight:bold;color:rgb(0,135,0)">False</span>, dtype<span style="color:rgb(98,98,98)">=</span>dtype)
-<span class="ansi-green-fg ansi-bold">    104</span>     y_pred <span style="color:rgb(98,98,98)">=</span> check_array(y_pred, ensure_2d<span style="color:rgb(98,98,98)">=</span><span style="font-weight:bold;color:rgb(0,135,0)">False</span>, dtype<span style="color:rgb(98,98,98)">=</span>dtype)
-
-File <span class="ansi-green-fg">~/anaconda3/envs/pypy/lib/python3.10/site-packages/sklearn/utils/validation.py:430</span>, in <span class="ansi-cyan-fg">check_consistent_length</span><span class="ansi-blue-fg">(*arrays)</span>
-<span class="ansi-green-fg ansi-bold">    428</span> uniques <span style="color:rgb(98,98,98)">=</span> np<span style="color:rgb(98,98,98)">.</span>unique(lengths)
-<span class="ansi-green-fg ansi-bold">    429</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="color:rgb(0,135,0)">len</span>(uniques) <span style="color:rgb(98,98,98)">&gt;</span> <span style="color:rgb(98,98,98)">1</span>:
-<span class="ansi-green-fg">--&gt; 430</span>     <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">ValueError</span>(
-<span class="ansi-green-fg ansi-bold">    431</span>         <span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">Found input variables with inconsistent numbers of samples: </span><span style="font-weight:bold;color:rgb(175,95,135)">%r</span><span style="color:rgb(175,0,0)">"</span>
-<span class="ansi-green-fg ansi-bold">    432</span>         <span style="color:rgb(98,98,98)">%</span> [<span style="color:rgb(0,135,0)">int</span>(l) <span style="font-weight:bold;color:rgb(0,135,0)">for</span> l <span style="font-weight:bold;color:rgb(175,0,255)">in</span> lengths]
-<span class="ansi-green-fg ansi-bold">    433</span>     )
-
-<span class="ansi-red-fg">ValueError</span>: Found input variables with inconsistent numbers of samples: [24, 21]</pre>
+<div class="cell-output cell-output-stdout">
+<pre><code>온도, 일사량 0.3652957905544259
+습도, 일사량 0.2600785050783011
+풍속, 일사량 0.08792570082191763
+강수량, 일사량 0.3652957905544259
+일사량 0.4390186400449338</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-19-output-2.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
 </div>
