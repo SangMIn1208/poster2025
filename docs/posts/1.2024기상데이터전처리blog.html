@@ -516,7 +516,7 @@ dtype: int64</code></pre>
 </div>
 <ul>
 <li>null값 제거</li>
-<li>강수량, 일사 변수만 null값이 있기때문에 0으로 측정이 안되었다고 판단</li>
+<li>강수량, 일사 변수만 null값이 있기때문에 비가 안올 때, 밤에 0으로 측정이 안되었다고 판단</li>
 <li>0으로 채움</li>
 </ul>
 <div id="1ecb5c14-d059-4164-b20d-28511635a1bd" class="cell" data-execution_count="21">
@@ -700,7 +700,7 @@ dtype: int64</code></pre>
 <ul>
 <li>csv 생성</li>
 </ul>
-<div id="9a1739b8-f721-4a72-be0b-a161aefaffc3" class="cell" data-execution_count="46">
+<div id="9a1739b8-f721-4a72-be0b-a161aefaffc3" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>wt.to_csv(<span class="st">'weather2024.csv'</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">'utf-8-sig'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
