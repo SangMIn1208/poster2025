@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.39">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="이상민">
+<meta name="dcterms.date" content="2025-03-31">
+
+<title>2. 날씨 데이터 시각화 – poster2025</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4e350e956af7e737a589c4f4a516a570.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">poster2025</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">2. 날씨 데이터 시각화</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>이상민 </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">March 31, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<div id="cell-1" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-2" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>wt<span class="op">=</span> pd.read_csv(<span class="st">"weather2024.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-3" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>wt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">일시</th>
+<th data-quarto-table-cell-role="th">기온</th>
+<th data-quarto-table-cell-role="th">강수량</th>
+<th data-quarto-table-cell-role="th">풍속</th>
+<th data-quarto-table-cell-role="th">습도</th>
+<th data-quarto-table-cell-role="th">일사</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2024-01-01 01:00</td>
+<td>3.8</td>
+<td>0.0</td>
+<td>1.5</td>
+<td>80</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2024-01-01 02:00</td>
+<td>3.9</td>
+<td>0.0</td>
+<td>0.2</td>
+<td>79</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2024-01-01 03:00</td>
+<td>3.5</td>
+<td>0.0</td>
+<td>0.4</td>
+<td>84</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2024-01-01 04:00</td>
+<td>1.9</td>
+<td>0.0</td>
+<td>1.1</td>
+<td>92</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2024-01-01 05:00</td>
+<td>1.4</td>
+<td>0.0</td>
+<td>1.5</td>
+<td>94</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8755</td>
+<td>2024-12-30 20:00</td>
+<td>7.6</td>
+<td>0.0</td>
+<td>1.4</td>
+<td>71</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8756</td>
+<td>2024-12-30 21:00</td>
+<td>7.5</td>
+<td>0.0</td>
+<td>1.7</td>
+<td>69</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8757</td>
+<td>2024-12-30 22:00</td>
+<td>7.2</td>
+<td>0.0</td>
+<td>1.2</td>
+<td>70</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8758</td>
+<td>2024-12-30 23:00</td>
+<td>7.2</td>
+<td>0.0</td>
+<td>1.7</td>
+<td>71</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8759</td>
+<td>2024-12-31 00:00</td>
+<td>7.4</td>
+<td>0.0</td>
+<td>2.8</td>
+<td>70</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>8760 rows × 6 columns</p>
+</div>
+</div>
+</div>
+<div id="cell-4" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>wt.columns <span class="op">=</span> [<span class="st">'date'</span>, <span class="st">'tem'</span>, <span class="st">'rain'</span>, <span class="st">'wind'</span>, <span class="st">'hum'</span>, <span class="st">'sol'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>전체 기간 시도표</li>
+</ul>
+<div id="cell-6" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    wt.iloc[:,[i<span class="op">+</span><span class="dv">1</span>]].plot(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">3</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-6-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-6-output-4.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-6-output-5.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>첫 1주일 시도표</li>
+</ul>
+<div id="cell-8" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">7</span>,[i<span class="op">+</span><span class="dv">1</span>]].plot(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">3</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-7-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-7-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-7-output-4.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-7-output-5.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-9" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.seasonal <span class="im">import</span> seasonal_decompose</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#ts = pd.Series(dff.iloc[:24*7,[0+1]].values, index=pd.date_range(start='2024-01-01', periods=24, freq='H'))</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 분해 수행 (Additive 모델, 주기성 주기=24시간)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> seasonal_decompose(wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="dv">0</span><span class="op">+</span><span class="dv">1</span>]].values, model<span class="op">=</span><span class="st">'additive'</span>, period<span class="op">=</span><span class="dv">24</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 시각화</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>result.plot()</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.suptitle("시계열 분해 결과 (추세 + 계절 + 잡음)")</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-10" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf, plot_pacf</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ts<span class="op">=</span>wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="dv">0</span><span class="op">+</span><span class="dv">1</span>]].values</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">4</span>))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plot_acf(ts, lags<span class="op">=</span><span class="dv">50</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>])</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">"ACF"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>plot_pacf(ts, lags<span class="op">=</span><span class="dv">50</span>, ax<span class="op">=</span>axes[<span class="dv">1</span>])</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">"PACF"</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.시각화및VAR적합_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-11" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>wt.iloc[:,<span class="dv">1</span>:].corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">tem</th>
+<th data-quarto-table-cell-role="th">rain</th>
+<th data-quarto-table-cell-role="th">wind</th>
+<th data-quarto-table-cell-role="th">hum</th>
+<th data-quarto-table-cell-role="th">sol</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">tem</td>
+<td>1.000000</td>
+<td>0.051619</td>
+<td>0.016475</td>
+<td>-0.056472</td>
+<td>0.348940</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">rain</td>
+<td>0.051619</td>
+<td>1.000000</td>
+<td>0.045720</td>
+<td>0.184801</td>
+<td>-0.070628</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">wind</td>
+<td>0.016475</td>
+<td>0.045720</td>
+<td>1.000000</td>
+<td>-0.311978</td>
+<td>0.284515</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">hum</td>
+<td>-0.056472</td>
+<td>0.184801</td>
+<td>-0.311978</td>
+<td>1.000000</td>
+<td>-0.620501</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sol</td>
+<td>0.348940</td>
+<td>-0.070628</td>
+<td>0.284515</td>
+<td>-0.620501</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="var-모형에-적합" class="level3">
+<h3 class="anchored" data-anchor-id="var-모형에-적합">VAR 모형에 적합</h3>
+<ul>
+<li><span class="math inline">\(X\)</span> : y의 과거값 및 외생변수, 길이는 24*14</li>
+<li><span class="math inline">\(y\)</span> : 예측하고자 하는 일사량, 길이는 24</li>
+</ul>
+<ol type="1">
+<li>온도와 일사량</li>
+</ol>
+<div id="cell-15" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> wt.iloc[<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>:<span class="dv">24</span><span class="op">*</span><span class="dv">15</span>,<span class="dv">1</span>:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-16" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.api <span class="im">import</span> VAR</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 데이터: y, x1~x4가 있는 시계열 데이터프레임</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 인덱스는 datetime이어야 함</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 정상성 검사 및 필요시 차분 (여기선 생략, 필요시 추가해줘)</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. VAR 모형 적합</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> VAR(X)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 시차 선택</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>lag_result <span class="op">=</span> model.select_order(maxlags<span class="op">=</span><span class="dv">48</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"AIC 기준 최적 시차:"</span>, lag_result.selected_orders[<span class="st">'aic'</span>])</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>lag <span class="op">=</span> lag_result.selected_orders[<span class="st">'aic'</span>]</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. VAR 모델 적합</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit(lag)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#print(results.summary())</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>AIC 기준 최적 시차: 21</code></pre>
+</div>
+</div>
+<div id="cell-17" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">21</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>forecast_input <span class="op">=</span> X.values[<span class="op">-</span>lag:]  <span class="co"># 최근 lag만큼의 데이터 사용</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>forecast1 <span class="op">=</span> results.forecast(y<span class="op">=</span>forecast_input, steps<span class="op">=</span>n_forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li>습도와 일사량</li>
+</ol>
+<div id="cell-19" class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="op">-</span><span class="dv">2</span>,<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#y = wt.iloc[24*7:24*8,1:]</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> VAR(X)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 시차 선택</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>lag_result <span class="op">=</span> model.select_order(maxlags<span class="op">=</span><span class="dv">24</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"AIC 기준 최적 시차:"</span>, lag_result.selected_orders[<span class="st">'aic'</span>])</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>lag <span class="op">=</span> lag_result.selected_orders[<span class="st">'aic'</span>]</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. VAR 모델 적합</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit(lag)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>results.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>AIC 기준 최적 시차: 21</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<pre><code>  Summary of Regression Results   
+==================================
+Model:                         VAR
+Method:                        OLS
+Date:           Mon, 31, Mar, 2025
+Time:                     08:39:30
+--------------------------------------------------------------------
+No. of Equations:         2.00000    BIC:                  0.0867873
+Nobs:                     315.000    HQIC:                 -0.528393
+Log likelihood:          -660.240    FPE:                   0.392863
+AIC:                    -0.937725    Det(Omega_mle):        0.304156
+--------------------------------------------------------------------
+Results for equation hum
+==========================================================================
+             coefficient       std. error           t-stat            prob
+--------------------------------------------------------------------------
+const          12.877262         3.048607            4.224           0.000
+L1.hum          1.034009         0.064842           15.947           0.000
+L1.sol         -6.288329         1.841606           -3.415           0.001
+L2.hum         -0.085306         0.091430           -0.933           0.351
+L2.sol          2.476996         2.761977            0.897           0.370
+L3.hum         -0.105987         0.091506           -1.158           0.247
+L3.sol          4.269964         2.810271            1.519           0.129
+L4.hum          0.104119         0.091715            1.135           0.256
+L4.sol         -3.066122         2.814244           -1.090           0.276
+L5.hum          0.020022         0.091322            0.219           0.826
+L5.sol          0.726784         2.790890            0.260           0.795
+L6.hum         -0.154890         0.090401           -1.713           0.087
+L6.sol         -1.001202         2.651443           -0.378           0.706
+L7.hum          0.063325         0.090179            0.702           0.483
+L7.sol         -1.789725         2.574931           -0.695           0.487
+L8.hum          0.013035         0.090204            0.145           0.885
+L8.sol          2.753985         2.559143            1.076           0.282
+L9.hum         -0.079469         0.090351           -0.880           0.379
+L9.sol         -2.534441         2.565794           -0.988           0.323
+L10.hum        -0.021562         0.090809           -0.237           0.812
+L10.sol         0.092242         2.566511            0.036           0.971
+L11.hum         0.101221         0.090510            1.118           0.263
+L11.sol         0.270904         2.559397            0.106           0.916
+L12.hum        -0.044597         0.090874           -0.491           0.624
+L12.sol        -0.931457         2.592624           -0.359           0.719
+L13.hum        -0.049559         0.090879           -0.545           0.586
+L13.sol         0.019081         2.638249            0.007           0.994
+L14.hum         0.071637         0.090692            0.790           0.430
+L14.sol        -1.801443         2.654979           -0.679           0.497
+L15.hum        -0.159492         0.091383           -1.745           0.081
+L15.sol        -1.397162         2.654903           -0.526           0.599
+L16.hum         0.130378         0.091520            1.425           0.154
+L16.sol         3.921220         2.642805            1.484           0.138
+L17.hum         0.125505         0.091874            1.366           0.172
+L17.sol        -0.658568         2.657127           -0.248           0.804
+L18.hum        -0.039232         0.092146           -0.426           0.670
+L18.sol         0.307973         2.647252            0.116           0.907
+L19.hum        -0.033336         0.091821           -0.363           0.717
+L19.sol        -2.210109         2.647698           -0.835           0.404
+L20.hum        -0.091010         0.091946           -0.990           0.322
+L20.sol         1.522105         2.596331            0.586           0.558
+L21.hum         0.060905         0.065948            0.924           0.356
+L21.sol        -3.586148         1.718873           -2.086           0.037
+==========================================================================
+
+Results for equation sol
+==========================================================================
+             coefficient       std. error           t-stat            prob
+--------------------------------------------------------------------------
+const          -0.013084         0.108455           -0.121           0.904
+L1.hum         -0.004107         0.002307           -1.780           0.075
+L1.sol          1.190143         0.065516           18.166           0.000
+L2.hum          0.001161         0.003253            0.357           0.721
+L2.sol         -0.319998         0.098258           -3.257           0.001
+L3.hum          0.003093         0.003255            0.950           0.342
+L3.sol         -0.013066         0.099976           -0.131           0.896
+L4.hum         -0.002233         0.003263           -0.685           0.494
+L4.sol         -0.105982         0.100118           -1.059           0.290
+L5.hum          0.000845         0.003249            0.260           0.795
+L5.sol          0.007535         0.099287            0.076           0.940
+L6.hum          0.004978         0.003216            1.548           0.122
+L6.sol         -0.002949         0.094326           -0.031           0.975
+L7.hum         -0.002640         0.003208           -0.823           0.410
+L7.sol          0.000148         0.091604            0.002           0.999
+L8.hum         -0.003149         0.003209           -0.981           0.326
+L8.sol          0.058175         0.091042            0.639           0.523
+L9.hum          0.002759         0.003214            0.858           0.391
+L9.sol          0.043017         0.091279            0.471           0.637
+L10.hum        -0.000294         0.003231           -0.091           0.927
+L10.sol        -0.032885         0.091305           -0.360           0.719
+L11.hum        -0.000207         0.003220           -0.064           0.949
+L11.sol        -0.080112         0.091052           -0.880           0.379
+L12.hum         0.001996         0.003233            0.617           0.537
+L12.sol        -0.010646         0.092234           -0.115           0.908
+L13.hum         0.002650         0.003233            0.820           0.412
+L13.sol         0.054054         0.093857            0.576           0.565
+L14.hum        -0.007051         0.003226           -2.185           0.029
+L14.sol         0.042851         0.094452            0.454           0.650
+L15.hum         0.004732         0.003251            1.456           0.146
+L15.sol         0.005935         0.094449            0.063           0.950
+L16.hum        -0.003122         0.003256           -0.959           0.338
+L16.sol        -0.081783         0.094019           -0.870           0.384
+L17.hum         0.000985         0.003268            0.301           0.763
+L17.sol         0.018094         0.094528            0.191           0.848
+L18.hum        -0.000796         0.003278           -0.243           0.808
+L18.sol        -0.070061         0.094177           -0.744           0.457
+L19.hum         0.003162         0.003267            0.968           0.333
+L19.sol        -0.020653         0.094193           -0.219           0.826
+L20.hum        -0.002413         0.003271           -0.738           0.461
+L20.sol         0.080876         0.092365            0.876           0.381
+L21.hum         0.000457         0.002346            0.195           0.846
+L21.sol         0.107119         0.061150            1.752           0.080
+==========================================================================
+
+Correlation matrix of residuals
+            hum       sol
+hum    1.000000 -0.387709
+sol   -0.387709  1.000000
+</code></pre>
+</div>
+</div>
+<div id="cell-20" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">21</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>forecast_input <span class="op">=</span> X.values[<span class="op">-</span>lag:]  <span class="co"># 최근 lag만큼의 데이터 사용</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>forecast2 <span class="op">=</span> results.forecast(y<span class="op">=</span>forecast_input, steps<span class="op">=</span>n_forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>풍속과 일사량</li>
+</ol>
+<div id="cell-22" class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="op">-</span><span class="dv">3</span>,<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#y = wt.iloc[24*7:24*8,1:]</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> VAR(X)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 시차 선택</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>lag_result <span class="op">=</span> model.select_order(maxlags<span class="op">=</span><span class="dv">24</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"AIC 기준 최적 시차:"</span>, lag_result.selected_orders[<span class="st">'aic'</span>])</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>lag <span class="op">=</span> lag_result.selected_orders[<span class="st">'aic'</span>]</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. VAR 모델 적합</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit(lag)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>results.summary()</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">21</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>forecast_input <span class="op">=</span> X.values[<span class="op">-</span>lag:]  <span class="co"># 최근 lag만큼의 데이터 사용</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>forecast2_ <span class="op">=</span> results.forecast(y<span class="op">=</span>forecast_input, steps<span class="op">=</span>n_forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>AIC 기준 최적 시차: 21</code></pre>
+</div>
+</div>
+<ol start="4" type="1">
+<li>강수량과 일사량</li>
+</ol>
+<div id="cell-24" class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="op">-</span><span class="dv">4</span>,<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#y = wt.iloc[24*7:24*8,1:]</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> VAR(X)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 시차 선택</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>lag_result <span class="op">=</span> model.select_order(maxlags<span class="op">=</span><span class="dv">24</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"AIC 기준 최적 시차:"</span>, lag_result.selected_orders[<span class="st">'aic'</span>])</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>lag <span class="op">=</span> lag_result.selected_orders[<span class="st">'aic'</span>]</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. VAR 모델 적합</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit(lag)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>results.summary()</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>n_forecast <span class="op">=</span> <span class="dv">21</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>forecast_input <span class="op">=</span> X.values[<span class="op">-</span>lag:]  <span class="co"># 최근 lag만큼의 데이터 사용</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>forecast3_ <span class="op">=</span> results.forecast(y<span class="op">=</span>forecast_input, steps<span class="op">=</span>n_forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>AIC 기준 최적 시차: 20</code></pre>
+</div>
+</div>
+<ul>
+<li>AR 모형 일사량만 이용</li>
+</ul>
+<div id="cell-26" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.ar_model <span class="im">import</span> AutoReg</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 예시: y 시계열 데이터프레임 (datetime index 권장)</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># df = pd.read_csv("your_data.csv", index_col=0, parse_dates=True)</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># y = df['y']</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>y_ <span class="op">=</span> wt.iloc[:<span class="dv">24</span><span class="op">*</span><span class="dv">14</span>,[<span class="op">-</span><span class="dv">1</span>]]<span class="co"># 시계열 형태로 가져오기</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 시차(p) 설정 또는 자동 선택</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="dv">21</span>  <span class="co"># 최근 24시간을 기반으로 다음을 예측한다고 가정</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. AR 모형 적합</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AutoReg(y_, lags<span class="op">=</span>p, old_names<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit()</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 다음 24시간 예측</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>forecast3 <span class="op">=</span> results.predict(start<span class="op">=</span><span class="bu">len</span>(y), end<span class="op">=</span><span class="bu">len</span>(y)<span class="op">+</span><span class="dv">23</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-27" class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'온도, 일사량'</span>,mean_squared_error(y[<span class="st">'sol'</span>].values,forecast1[:,<span class="dv">1</span>]))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'습도, 일사량'</span>,mean_squared_error(y[<span class="st">'sol'</span>].values,forecast2[:,<span class="dv">1</span>]))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'풍속, 일사량'</span>,mean_squared_error(y[<span class="st">'sol'</span>].values,forecast2_[:,<span class="dv">1</span>]))</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'강수량, 일사량'</span>,mean_squared_error(y[<span class="st">'sol'</span>].values,forecast3_[:,<span class="dv">1</span>]))</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'일사량'</span>,mean_squared_error(y[<span class="st">'sol'</span>].values,forecast3))</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize <span class="op">=</span> (<span class="dv">15</span>,<span class="dv">7</span>))</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>plt.plot(y[<span class="st">'sol'</span>].values, label <span class="op">=</span> <span class="st">'y'</span>,color <span class="op">=</span> <span class="st">'black'</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>plt.plot(forecast1[:,<span class="dv">1</span>],label <span class="op">=</span> <span class="st">'tem+sol'</span>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>plt.plot(forecast2[:,<span class="dv">1</span>],label <span class="op">=</span> <span class="st">'hum+sol'</span>)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>plt.plot(forecast2_[:,<span class="dv">1</span>],label <span class="op">=</span> <span class="st">'wind+sol'</span>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>plt.plot(forecast3_[:,<span class="dv">1</span>],label <span class="op">=</span> <span class="st">'rain+sol'</span>)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>plt.plot(forecast3.values,label <span class="op">=</span> <span class="st">'sol'</span>)</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[51], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span style="color:rgb(0,135,0)">print</span>(<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">온도, 일사량</span><span style="color:rgb(175,0,0)">'</span>,<span class="ansi-yellow-bg">mean_squared_error</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">y</span><span class="ansi-yellow-bg">[</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">'</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">sol</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">'</span><span class="ansi-yellow-bg">]</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">values</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg">forecast1</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">:</span><span class="ansi-yellow-bg">,</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">1</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">)</span>)
+<span class="ansi-green-fg ansi-bold">      2</span> <span style="color:rgb(0,135,0)">print</span>(<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">습도, 일사량</span><span style="color:rgb(175,0,0)">'</span>,mean_squared_error(y[<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">sol</span><span style="color:rgb(175,0,0)">'</span>]<span style="color:rgb(98,98,98)">.</span>values,forecast2[:,<span style="color:rgb(98,98,98)">1</span>]))
+<span class="ansi-green-fg ansi-bold">      3</span> <span style="color:rgb(0,135,0)">print</span>(<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">풍속, 일사량</span><span style="color:rgb(175,0,0)">'</span>,mean_squared_error(y[<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">sol</span><span style="color:rgb(175,0,0)">'</span>]<span style="color:rgb(98,98,98)">.</span>values,forecast2_[:,<span style="color:rgb(98,98,98)">1</span>]))
+
+File <span class="ansi-green-fg">~/anaconda3/envs/pypy/lib/python3.10/site-packages/sklearn/utils/_param_validation.py:213</span>, in <span class="ansi-cyan-fg">validate_params.&lt;locals&gt;.decorator.&lt;locals&gt;.wrapper</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
+<span class="ansi-green-fg ansi-bold">    207</span> <span style="font-weight:bold;color:rgb(0,135,0)">try</span>:
+<span class="ansi-green-fg ansi-bold">    208</span>     <span style="font-weight:bold;color:rgb(0,135,0)">with</span> config_context(
+<span class="ansi-green-fg ansi-bold">    209</span>         skip_parameter_validation<span style="color:rgb(98,98,98)">=</span>(
+<span class="ansi-green-fg ansi-bold">    210</span>             prefer_skip_nested_validation <span style="font-weight:bold;color:rgb(175,0,255)">or</span> global_skip_validation
+<span class="ansi-green-fg ansi-bold">    211</span>         )
+<span class="ansi-green-fg ansi-bold">    212</span>     ):
+<span class="ansi-green-fg">--&gt; 213</span>         <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">func</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg ansi-bold">    214</span> <span style="font-weight:bold;color:rgb(0,135,0)">except</span> InvalidParameterError <span style="font-weight:bold;color:rgb(0,135,0)">as</span> e:
+<span class="ansi-green-fg ansi-bold">    215</span>     <span style="font-style:italic;color:rgb(95,135,135)"># When the function is just a wrapper around an estimator, we allow</span>
+<span class="ansi-green-fg ansi-bold">    216</span>     <span style="font-style:italic;color:rgb(95,135,135)"># the function to delegate validation to the estimator, but we replace</span>
+<span class="ansi-green-fg ansi-bold">    217</span>     <span style="font-style:italic;color:rgb(95,135,135)"># the name of the estimator by the name of the function in the error</span>
+<span class="ansi-green-fg ansi-bold">    218</span>     <span style="font-style:italic;color:rgb(95,135,135)"># message to avoid confusion.</span>
+<span class="ansi-green-fg ansi-bold">    219</span>     msg <span style="color:rgb(98,98,98)">=</span> re<span style="color:rgb(98,98,98)">.</span>sub(
+<span class="ansi-green-fg ansi-bold">    220</span>         <span style="color:rgb(175,0,0)">r</span><span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">parameter of </span><span style="color:rgb(175,0,0)">\</span><span style="color:rgb(175,0,0)">w+ must be</span><span style="color:rgb(175,0,0)">"</span>,
+<span class="ansi-green-fg ansi-bold">    221</span>         <span style="color:rgb(175,0,0)">f</span><span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">parameter of </span><span style="font-weight:bold;color:rgb(175,95,135)">{</span>func<span style="color:rgb(98,98,98)">.</span><span style="color:rgb(0,0,135)">__qualname__</span><span style="font-weight:bold;color:rgb(175,95,135)">}</span><span style="color:rgb(175,0,0)"> must be</span><span style="color:rgb(175,0,0)">"</span>,
+<span class="ansi-green-fg ansi-bold">    222</span>         <span style="color:rgb(0,135,0)">str</span>(e),
+<span class="ansi-green-fg ansi-bold">    223</span>     )
+
+File <span class="ansi-green-fg">~/anaconda3/envs/pypy/lib/python3.10/site-packages/sklearn/metrics/_regression.py:497</span>, in <span class="ansi-cyan-fg">mean_squared_error</span><span class="ansi-blue-fg">(y_true, y_pred, sample_weight, multioutput, squared)</span>
+<span class="ansi-green-fg ansi-bold">    492</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="font-weight:bold;color:rgb(175,0,255)">not</span> squared:
+<span class="ansi-green-fg ansi-bold">    493</span>         <span style="font-weight:bold;color:rgb(0,135,0)">return</span> root_mean_squared_error(
+<span class="ansi-green-fg ansi-bold">    494</span>             y_true, y_pred, sample_weight<span style="color:rgb(98,98,98)">=</span>sample_weight, multioutput<span style="color:rgb(98,98,98)">=</span>multioutput
+<span class="ansi-green-fg ansi-bold">    495</span>         )
+<span class="ansi-green-fg">--&gt; 497</span> y_type, y_true, y_pred, multioutput <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">_check_reg_targets</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg ansi-bold">    498</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">y_true</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">y_pred</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">multioutput</span>
+<span class="ansi-green-fg ansi-bold">    499</span> <span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg ansi-bold">    500</span> check_consistent_length(y_true, y_pred, sample_weight)
+<span class="ansi-green-fg ansi-bold">    501</span> output_errors <span style="color:rgb(98,98,98)">=</span> np<span style="color:rgb(98,98,98)">.</span>average((y_true <span style="color:rgb(98,98,98)">-</span> y_pred) <span style="color:rgb(98,98,98)">*</span><span style="color:rgb(98,98,98)">*</span> <span style="color:rgb(98,98,98)">2</span>, axis<span style="color:rgb(98,98,98)">=</span><span style="color:rgb(98,98,98)">0</span>, weights<span style="color:rgb(98,98,98)">=</span>sample_weight)
+
+File <span class="ansi-green-fg">~/anaconda3/envs/pypy/lib/python3.10/site-packages/sklearn/metrics/_regression.py:102</span>, in <span class="ansi-cyan-fg">_check_reg_targets</span><span class="ansi-blue-fg">(y_true, y_pred, multioutput, dtype)</span>
+<span class="ansi-green-fg ansi-bold">     68</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span> <span style="color:rgb(0,0,255)">_check_reg_targets</span>(y_true, y_pred, multioutput, dtype<span style="color:rgb(98,98,98)">=</span><span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">numeric</span><span style="color:rgb(175,0,0)">"</span>):
+<span class="ansi-green-fg ansi-bold">     69</span> <span style="color:rgb(188,188,188)">    </span><span style="font-style:italic;color:rgb(175,0,0)">"""Check that y_true and y_pred belong to the same regression task.</span>
+<span class="ansi-green-fg ansi-bold">     70</span> 
+<span class="ansi-green-fg ansi-bold">     71</span> <span style="font-style:italic;color:rgb(175,0,0)">    Parameters</span>
+<span class="ansi-green-fg">   (...)</span>
+<span class="ansi-green-fg ansi-bold">    100</span> <span style="font-style:italic;color:rgb(175,0,0)">        correct keyword.</span>
+<span class="ansi-green-fg ansi-bold">    101</span> <span style="font-style:italic;color:rgb(175,0,0)">    """</span>
+<span class="ansi-green-fg">--&gt; 102</span>     <span class="ansi-yellow-bg">check_consistent_length</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">y_true</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">y_pred</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg ansi-bold">    103</span>     y_true <span style="color:rgb(98,98,98)">=</span> check_array(y_true, ensure_2d<span style="color:rgb(98,98,98)">=</span><span style="font-weight:bold;color:rgb(0,135,0)">False</span>, dtype<span style="color:rgb(98,98,98)">=</span>dtype)
+<span class="ansi-green-fg ansi-bold">    104</span>     y_pred <span style="color:rgb(98,98,98)">=</span> check_array(y_pred, ensure_2d<span style="color:rgb(98,98,98)">=</span><span style="font-weight:bold;color:rgb(0,135,0)">False</span>, dtype<span style="color:rgb(98,98,98)">=</span>dtype)
+
+File <span class="ansi-green-fg">~/anaconda3/envs/pypy/lib/python3.10/site-packages/sklearn/utils/validation.py:430</span>, in <span class="ansi-cyan-fg">check_consistent_length</span><span class="ansi-blue-fg">(*arrays)</span>
+<span class="ansi-green-fg ansi-bold">    428</span> uniques <span style="color:rgb(98,98,98)">=</span> np<span style="color:rgb(98,98,98)">.</span>unique(lengths)
+<span class="ansi-green-fg ansi-bold">    429</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="color:rgb(0,135,0)">len</span>(uniques) <span style="color:rgb(98,98,98)">&gt;</span> <span style="color:rgb(98,98,98)">1</span>:
+<span class="ansi-green-fg">--&gt; 430</span>     <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">ValueError</span>(
+<span class="ansi-green-fg ansi-bold">    431</span>         <span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">Found input variables with inconsistent numbers of samples: </span><span style="font-weight:bold;color:rgb(175,95,135)">%r</span><span style="color:rgb(175,0,0)">"</span>
+<span class="ansi-green-fg ansi-bold">    432</span>         <span style="color:rgb(98,98,98)">%</span> [<span style="color:rgb(0,135,0)">int</span>(l) <span style="font-weight:bold;color:rgb(0,135,0)">for</span> l <span style="font-weight:bold;color:rgb(175,0,255)">in</span> lengths]
+<span class="ansi-green-fg ansi-bold">    433</span>     )
+
+<span class="ansi-red-fg">ValueError</span>: Found input variables with inconsistent numbers of samples: [24, 21]</pre>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
