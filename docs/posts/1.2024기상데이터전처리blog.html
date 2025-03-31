@@ -188,10 +188,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="fec5f7be-24e4-4ff6-b4b3-6f80f02e7256" class="cell" data-execution_count="1">
+<div id="fec5f7be-24e4-4ff6-b4b3-6f80f02e7256" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="802e69fd-6578-4bc6-ac6a-23d92ab07dff" class="cell" data-execution_count="30">
+<ul>
+<li>데이터 불러오기</li>
+</ul>
+<div id="802e69fd-6578-4bc6-ac6a-23d92ab07dff" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>wt<span class="op">=</span> pd.read_csv(<span class="st">"OBS_ASOS_TIM_20250322224121.csv"</span>,encoding<span class="op">=</span><span class="st">"cp949"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="16d43648-54e0-419c-9290-28293838a3c5" class="cell" data-execution_count="31">
@@ -343,49 +346,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="0030fa5f-d08e-4c94-aba9-f6787fd0cd0b" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>wt.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 8760 entries, 0 to 8759
-Data columns (total 8 columns):
- #   Column     Non-Null Count  Dtype  
----  ------     --------------  -----  
- 0   지점         8760 non-null   int64  
- 1   지점명        8760 non-null   object 
- 2   일시         8760 non-null   object 
- 3   기온(°C)     8760 non-null   float64
- 4   강수량(mm)    938 non-null    float64
- 5   풍속(m/s)    8760 non-null   float64
- 6   습도(%)      8760 non-null   int64  
- 7   일사(MJ/m2)  4793 non-null   float64
-dtypes: float64(4), int64(2), object(2)
-memory usage: 547.6+ KB</code></pre>
+<ul>
+<li>null값 확인</li>
+</ul>
+<div id="0030fa5f-d08e-4c94-aba9-f6787fd0cd0b" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>wt.isnull().<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>지점              0
+지점명             0
+일시              0
+기온(°C)          0
+강수량(mm)      7822
+풍속(m/s)         0
+습도(%)           0
+일사(MJ/m2)    3967
+dtype: int64</code></pre>
 </div>
 </div>
-<div id="d234ac8e-280e-4a6f-8fa6-d93c43283dea" class="cell" data-execution_count="33">
+<div id="d234ac8e-280e-4a6f-8fa6-d93c43283dea" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wt.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="33">
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>Index(['지점', '지점명', '일시', '기온(°C)', '강수량(mm)', '풍속(m/s)', '습도(%)',
        '일사(MJ/m2)'],
       dtype='object')</code></pre>
 </div>
 </div>
-<div id="4fdbe8ff-964b-4ada-8512-5484d798a14d" class="cell" data-execution_count="34">
+<ul>
+<li>필요없는 변수 제거</li>
+</ul>
+<div id="4fdbe8ff-964b-4ada-8512-5484d798a14d" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>wt<span class="op">=</span>wt.drop(columns<span class="op">=</span>[<span class="st">'지점명'</span>,<span class="st">'지점'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="68ed83c3-c96f-42cc-88f2-7f5b7b4d279a" class="cell" data-execution_count="35">
+<div id="68ed83c3-c96f-42cc-88f2-7f5b7b4d279a" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>wt.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="35">
+<div class="cell-output cell-output-display" data-execution_count="16">
 <pre><code>Index(['일시', '기온(°C)', '강수량(mm)', '풍속(m/s)', '습도(%)', '일사(MJ/m2)'], dtype='object')</code></pre>
 </div>
 </div>
-<div id="3453cb66-a185-4c93-a98f-10e615ef97a9" class="cell" data-execution_count="36">
+<ul>
+<li>column명 쉽게 변경</li>
+</ul>
+<div id="3453cb66-a185-4c93-a98f-10e615ef97a9" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>wt.columns<span class="op">=</span>[<span class="st">'일시'</span>,<span class="st">'기온'</span>,<span class="st">'강수량'</span>,<span class="st">'풍속'</span>,<span class="st">'습도'</span>,<span class="st">'일사'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="f3cf201d-7f6c-4c5a-ac52-82a98fb441a1" class="cell" data-execution_count="37">
+<div id="f3cf201d-7f6c-4c5a-ac52-82a98fb441a1" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>wt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="37">
+<div class="cell-output cell-output-display" data-execution_count="18">
 <div>
 
 
@@ -508,12 +514,17 @@ memory usage: 547.6+ KB</code></pre>
 </div>
 </div>
 </div>
-<div id="e755b367-ce29-4f6c-95c0-f05600e3ee75" class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>wt <span class="op">=</span> wt[[<span class="st">'일시'</span>,<span class="st">'강수량'</span>, <span class="st">'기온'</span>, <span class="st">'습도'</span>, <span class="st">'일사'</span>, <span class="st">'풍속'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>null값 제거</li>
+<li>강수량, 일사 변수만 null값이 있기때문에 0으로 측정이 안되었다고 판단</li>
+<li>0으로 채움</li>
+</ul>
+<div id="1ecb5c14-d059-4164-b20d-28511635a1bd" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>wt[[<span class="st">'강수량'</span>, <span class="st">'일사'</span>]] <span class="op">=</span> wt[[<span class="st">'강수량'</span>, <span class="st">'일사'</span>]].fillna(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="4db49ad6-d9ea-4542-8513-398ff570ec13" class="cell" data-execution_count="39">
+<div id="68747ce5-9e95-4f13-8551-64ab7cd32849" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>wt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="39">
+<div class="cell-output cell-output-display" data-execution_count="22">
 <div>
 
 
@@ -522,58 +533,58 @@ memory usage: 547.6+ KB</code></pre>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">일시</th>
-<th data-quarto-table-cell-role="th">강수량</th>
 <th data-quarto-table-cell-role="th">기온</th>
+<th data-quarto-table-cell-role="th">강수량</th>
+<th data-quarto-table-cell-role="th">풍속</th>
 <th data-quarto-table-cell-role="th">습도</th>
 <th data-quarto-table-cell-role="th">일사</th>
-<th data-quarto-table-cell-role="th">풍속</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>2024-01-01 01:00</td>
-<td>NaN</td>
 <td>3.8</td>
-<td>80</td>
-<td>NaN</td>
+<td>0.0</td>
 <td>1.5</td>
+<td>80</td>
+<td>0.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
 <td>2024-01-01 02:00</td>
-<td>NaN</td>
 <td>3.9</td>
-<td>79</td>
-<td>NaN</td>
+<td>0.0</td>
 <td>0.2</td>
+<td>79</td>
+<td>0.0</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>2024-01-01 03:00</td>
-<td>NaN</td>
 <td>3.5</td>
-<td>84</td>
-<td>NaN</td>
+<td>0.0</td>
 <td>0.4</td>
+<td>84</td>
+<td>0.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
 <td>2024-01-01 04:00</td>
-<td>NaN</td>
 <td>1.9</td>
-<td>92</td>
-<td>NaN</td>
+<td>0.0</td>
 <td>1.1</td>
+<td>92</td>
+<td>0.0</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
 <td>2024-01-01 05:00</td>
-<td>NaN</td>
 <td>1.4</td>
-<td>94</td>
-<td>NaN</td>
+<td>0.0</td>
 <td>1.5</td>
+<td>94</td>
+<td>0.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">...</td>
@@ -587,47 +598,47 @@ memory usage: 547.6+ KB</code></pre>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">8755</td>
 <td>2024-12-30 20:00</td>
-<td>NaN</td>
 <td>7.6</td>
-<td>71</td>
-<td>NaN</td>
+<td>0.0</td>
 <td>1.4</td>
+<td>71</td>
+<td>0.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">8756</td>
 <td>2024-12-30 21:00</td>
-<td>NaN</td>
 <td>7.5</td>
-<td>69</td>
-<td>NaN</td>
+<td>0.0</td>
 <td>1.7</td>
+<td>69</td>
+<td>0.0</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">8757</td>
 <td>2024-12-30 22:00</td>
-<td>NaN</td>
 <td>7.2</td>
-<td>70</td>
-<td>NaN</td>
+<td>0.0</td>
 <td>1.2</td>
+<td>70</td>
+<td>0.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">8758</td>
 <td>2024-12-30 23:00</td>
-<td>NaN</td>
 <td>7.2</td>
-<td>71</td>
-<td>NaN</td>
+<td>0.0</td>
 <td>1.7</td>
+<td>71</td>
+<td>0.0</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">8759</td>
 <td>2024-12-31 00:00</td>
-<td>NaN</td>
 <td>7.4</td>
-<td>70</td>
-<td>NaN</td>
+<td>0.0</td>
 <td>2.8</td>
+<td>70</td>
+<td>0.0</td>
 </tr>
 </tbody>
 </table>
@@ -636,154 +647,26 @@ memory usage: 547.6+ KB</code></pre>
 </div>
 </div>
 </div>
-<div id="1ecb5c14-d059-4164-b20d-28511635a1bd" class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>wt[[<span class="st">'강수량'</span>, <span class="st">'일사'</span>]] <span class="op">=</span> wt[[<span class="st">'강수량'</span>, <span class="st">'일사'</span>]].fillna(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="68747ce5-9e95-4f13-8551-64ab7cd32849" class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>wt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="41">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">일시</th>
-<th data-quarto-table-cell-role="th">강수량</th>
-<th data-quarto-table-cell-role="th">기온</th>
-<th data-quarto-table-cell-role="th">습도</th>
-<th data-quarto-table-cell-role="th">일사</th>
-<th data-quarto-table-cell-role="th">풍속</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>2024-01-01 01:00</td>
-<td>0.0</td>
-<td>3.8</td>
-<td>80</td>
-<td>0.0</td>
-<td>1.5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>2024-01-01 02:00</td>
-<td>0.0</td>
-<td>3.9</td>
-<td>79</td>
-<td>0.0</td>
-<td>0.2</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>2024-01-01 03:00</td>
-<td>0.0</td>
-<td>3.5</td>
-<td>84</td>
-<td>0.0</td>
-<td>0.4</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>2024-01-01 04:00</td>
-<td>0.0</td>
-<td>1.9</td>
-<td>92</td>
-<td>0.0</td>
-<td>1.1</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>2024-01-01 05:00</td>
-<td>0.0</td>
-<td>1.4</td>
-<td>94</td>
-<td>0.0</td>
-<td>1.5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">8755</td>
-<td>2024-12-30 20:00</td>
-<td>0.0</td>
-<td>7.6</td>
-<td>71</td>
-<td>0.0</td>
-<td>1.4</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">8756</td>
-<td>2024-12-30 21:00</td>
-<td>0.0</td>
-<td>7.5</td>
-<td>69</td>
-<td>0.0</td>
-<td>1.7</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">8757</td>
-<td>2024-12-30 22:00</td>
-<td>0.0</td>
-<td>7.2</td>
-<td>70</td>
-<td>0.0</td>
-<td>1.2</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">8758</td>
-<td>2024-12-30 23:00</td>
-<td>0.0</td>
-<td>7.2</td>
-<td>71</td>
-<td>0.0</td>
-<td>1.7</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">8759</td>
-<td>2024-12-31 00:00</td>
-<td>0.0</td>
-<td>7.4</td>
-<td>70</td>
-<td>0.0</td>
-<td>2.8</td>
-</tr>
-</tbody>
-</table>
-
-<p>8760 rows × 6 columns</p>
-</div>
-</div>
-</div>
-<div id="5372f62a-3b25-4e22-a1e0-dbedf666ec52" class="cell" data-execution_count="45">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 그래프 크기 설정</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>axes <span class="op">=</span> axes.flatten()</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 각 변수별 시각화</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(wt.columns[<span class="dv">1</span>:]):</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    sns.lineplot(data<span class="op">=</span>wt[col], marker<span class="op">=</span><span class="st">'o'</span>, ax<span class="op">=</span>axes[i])</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    axes[i].set_title(col)</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    axes[i].set_ylabel(col)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 빈 그래프 삭제</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>fig.delaxes(axes[<span class="op">-</span><span class="dv">1</span>])  </span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5372f62a-3b25-4e22-a1e0-dbedf666ec52" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 그래프 크기 설정</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>axes <span class="op">=</span> axes.flatten()</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 각 변수별 시각화</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(wt.columns[<span class="dv">1</span>:]):</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    sns.lineplot(data<span class="op">=</span>wt[col], marker<span class="op">=</span><span class="st">'o'</span>, ax<span class="op">=</span>axes[i])</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    axes[i].set_title(col)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    axes[i].set_ylabel(col)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 빈 그래프 삭제</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>fig.delaxes(axes[<span class="op">-</span><span class="dv">1</span>])  </span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/root/anaconda3/envs/pypy/lib/python3.10/site-packages/seaborn/_oldcore.py:1119: FutureWarning: use_inf_as_na option is deprecated and will be removed in a future version. Convert inf values to NaN before operating instead.
   with pd.option_context('mode.use_inf_as_na', True):
@@ -809,13 +692,16 @@ memory usage: 547.6+ KB</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="1.2024기상데이터전처리blog_files/figure-html/cell-15-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="1.2024기상데이터전처리blog_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<ul>
+<li>csv 생성</li>
+</ul>
 <div id="9a1739b8-f721-4a72-be0b-a161aefaffc3" class="cell" data-execution_count="46">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>wt.to_csv(<span class="st">'weather2024.csv'</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">'utf-8-sig'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>wt.to_csv(<span class="st">'weather2024.csv'</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">'utf-8-sig'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
