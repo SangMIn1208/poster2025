@@ -180,8 +180,9 @@ window.Quarto = {
 
 
 
+<p>링크 : <a href="https://arxiv.org/abs/1802.05842">Neural Granger Causality</a></p>
 <section id="linear-granger-causality" class="level3">
-<h3 class="anchored" data-anchor-id="linear-granger-causality">1. Linear Granger causality</h3>
+<h3 class="anchored" data-anchor-id="linear-granger-causality">2. Linear Granger causality</h3>
 <ul>
 <li>Granger causality : 한 시계열의 과거 값이 다른 시계열이 미래 값을 예측하는데 도움이 되는지를 평가하는 개념</li>
 <li>VAR(Vector Autogressive Regression)모델
@@ -212,9 +213,33 @@ window.Quarto = {
 </ul>
 </section>
 <section id="models-for-neural-granger-causality" class="level3">
-<h3 class="anchored" data-anchor-id="models-for-neural-granger-causality">2. Models for Neural Granger Causality</h3>
+<h3 class="anchored" data-anchor-id="models-for-neural-granger-causality">3. Models for Neural Granger Causality</h3>
+<section id="adapting-neural-networks-for-granger-causality" class="level4">
+<h4 class="anchored" data-anchor-id="adapting-neural-networks-for-granger-causality">3.1 Adapting Neural Networks for Granger Causality</h4>
+<ul>
+<li><p>비선형 자기 회귀 모델(Nonlinear Autogressive Model, NAR)</p></li>
+<li><p><span class="math inline">\(x_t=g(x_{&lt;t1},...,x_{&lt;tp})+\epsilon_t\)</span></p></li>
+<li><p><span class="math inline">\(x_t\)</span> : 시점 t에서의 다변량 시계열 데이터</p></li>
+<li><p><span class="math inline">\(x_{&lt;t1},...,x_{&lt;tp}\)</span> : 과거 p개의 시점에서 수집된 데이터</p></li>
+<li><p><span class="math inline">\(g(*)\)</span> : 비선형 함수(ex: 신경망)</p></li>
+<li><p><span class="math inline">\(e_t : 평균이 0인 잡음(noise)\)</span></p></li>
+<li><p>Problem</p>
+<ul>
+<li>블랙박스 문제 : MLP/LSTM은 강력한 예측성능을 가지지만 학습된 모델이 어떤 변수의 영향을 받는지 해석하기 어려움</li>
+<li>시간지연(Lag) 선택문제 : 전통적인 VAR모델에서는 최대 시차 k를 설정해야 하는데, 신경망 모델에서는 이를 자동으로 결정하는 방법이 필요</li>
+</ul></li>
+<li><p>해결방법</p>
+<ul>
+<li>cMLP,cLSTM : Component-wise Neural Network</li>
+<li>아이디어 : 각 출력 변수 <span class="math inline">\(x_{ti}\)</span>마다 독립적인 신경망 <span class="math inline">\(g_i\)</span>를 사용하여 입력변수와의 관계를 학습</li>
+<li>기존과 다르게 입력 가중치에 대한 희소성 패널티를 추가해 Granger Causality 분석가능</li>
+<li>예시 : <span class="math inline">\(x_{ti}=g_i(x_{&lt;t1},...,x_{&lt;tp})+e_t\)</span></li>
+<li><span class="math inline">\(g_i(*)\)</span> 변수 <span class="math inline">\(i\)</span>에 대한 신경망 모델, 특정변수 <span class="math inline">\(j\)</span>가 <span class="math inline">\(i\)</span>에 영향을 미치지 않는다면, <span class="math inline">\(g_{-i}\)</span>에서 <span class="math inline">\(x_{&lt;tj}\)</span>에 대해 불변해야함</li>
+</ul></li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
