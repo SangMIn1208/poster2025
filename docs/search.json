@@ -2,16 +2,16 @@
   {
     "objectID": "posts/3.granger논문읽기.html",
     "href": "posts/3.granger논문읽기.html",
-    "title": "3. granger 논문 읽기",
+    "title": "3. granger causality",
     "section": "",
     "text": "링크 : Granger Causality"
   },
   {
     "objectID": "posts/3.granger논문읽기.html#granger-causality-a-review-and-recend-advances",
     "href": "posts/3.granger논문읽기.html#granger-causality-a-review-and-recend-advances",
-    "title": "3. granger 논문 읽기",
+    "title": "3. granger causality",
     "section": "Granger Causality : A Review and Recend Advances",
-    "text": "Granger Causality : A Review and Recend Advances"
+    "text": "Granger Causality : A Review and Recend Advances\n\n다양한 분야에서 시계열 간의 상호작용을 이해하는 것이 중요\n우리는 시계열 간의 인과적 상호작용을 이해하고자 하지만 실험이 불가능하고 현상에 대한 기계적 모델도 없는 상황에서 관측 데이터에 기반한 추론만 가능하다는 제한이 존재\n\n(미래를 모르기 때문에)\n\n이러한 경우, 시계열에 내재된 시간 순서성을 활용해, 과거가 미래에 영향을 준다는 방향으로 제한된 인과적 설명을 이끌어내는 프레임워크 제안\n시계열 \\(y_{t}\\) 의 과거 값이 다른 시계열 \\(x_{t}\\) 의 미래값을 얼마나 잘 예측할 수 있는지에 기반하여 인과성의 개념을 제안\n\n제한된 모델 : $Y_{t}=+ _{i=1}^{p} iY{t-i} + _t $\n\n과거의 Y 값만 사용하여 \\(Y_t\\)를 예측하는 모델\n\n확장된 모델 : $Y_{t}=+ {i=1}^{p} iY{t-i} + {j=1}^{q} Y_jX_{t-j} + _t $\n\n과거의 Y값 뿐만 아니라 X의 과거 값까지 사용하여 예측\n\n\n제약\n\nreal-valued time series with\nlinear dynamics dependent on\na knwn number of past lagged observations, with\nobservations available at a fixed, discrete sampling rate that matches the time scale of the causal structure of interest\n\n“Granger Causality”는 단순한 예측 가능성을 의미\nGranger 에서 말하는 인과성은 진정한 인과관계 X\nY의 과거 정보를 포함해서 X의 예측오차가 줄어들면 Y가 X의 Granger causality\n\n\\(H&lt;t\\) 시간 t 이전의 모든 정보 집합\n\\(P(X_t|H&lt;t)\\) 해당 정보 집합을 통한 x의 최적의 예측\n\\(var(x_t-P(x_t|H&lt;t))\\) $ &lt; $ \\(var(x_t-P(x_t|H&lt;t / y&lt;t)\\)\n\nVAR 모델 기반 Granger 모델\n\\(A^0x_t=\\sum_{k=1}^{d}A^kX_{t-k}+\\epsilon_{t}\\)\n\n시간 t에서의 변수 벡터를 \\(X_{t} =(x_1t, x_2t, ...x_pt)^T\\)\n\\(A_{k}\\)는 시차(lag) : k에 대한 회귀계수 행렬\n\\(\\epsilon_t\\) : 백색 잡음\n\nGranger 인과성의 기본가정(제한점) &lt;- 분석을 하기위해선 아래가정 충족해야함\n\n연속형 시계열\n선형성\n이산된 시간\n고정된 시차\n정상성\n완전한 관측(오차가 없어야함)\n관련된 모든 변수가 포함되어야함\n\n초기 Granger 인과성 검증 방법\n이변량 모델\n\n\\(a_{0x}*x_t=\\sum_{k=1}^{d}a^{(k)}_{xx}x_{t-k}+\\sum_{k=1}^{d}a^{(k)}_{xy}y_{t-k}+e_{t,x}\\)\n\\(a_{0y}*y_t=\\sum_{k=1}^{d}a^{(k)}_{yy}y_{t-k}+\\sum_{k=1}^{d}a^{(k)}_{yx}x_{t-k}+e_{t,y}\\)\n\nReduced Model, Full model을 비교해 F검정 실시\n\n\\(F=\\frac{(RSS_{red}-RSS_{full}/(r-s))}{RSS_{full}/(T-r)}\\)\n귀무가설 \\(H_{0} : Y_{t}는 X_{t} granger 원인이 아니다(Y_j=0)\\)\n대립가설 \\(H_{1} : Y_{t}는 X_{t} granger 원인이다(Y_j\\neq0)\\)\n\n전통적으로 선형 VAR 모델 가정으로 기반\n하지만 현실의 시스템은 훨씬 복잡하고 전통적 프레임은 한계점 존재\n\n이변량 모델을 사용하여 고차원 데이터는 정확하 분석 어려움\n비선형성과 비정규성 문제(VAR모델은 이러한 특성 반영 불가)\n불규칙 샘플링 및 관측 데이터 문제(고정된 시간 간격으로 수집, 현실에서는 다양한 주기로 변화 발생)\n\n해결을 위한 현대의 시도\n\n네트워크 Granger 인과성 : 여러개의 시계열 변수를 동시에 고려하여 다변량 인과성 분석\n비선형, 고차원 데이터 처리 : Lasso 및 Group Lasso 를 활용한 고차원 VAR모델, 딥러닝, 머신러닝 기법으로 비선형 인과성 분석\n비정상 시계열 및 혼합 주파수 데이터 처리 :\n\n현실에서는 시계열 데이터가 동일하게 수집되지 않는 문제 해결기법 개발\n다중 시간 척도에서 데이터를 통합하여 Granger 인과성 분석\n\n\n네트워크 기반 Granger Causality\n\n다변량 시계열에서 여러 변수 간의 상호작용을 고려하여 인과관계 분석\n\n이변량이 아닌 전체 변수(외생변수들의 영향 고려) 네트워크를 분석\nVAR 모델 활용\n\n\\(x_t=\\sum_{k=1}^{d}A^kX_{t-k}+\\epsilon_t\\)\n\\(A_k\\)의 특정요소가 0이 아니면 해당 변수간의 인과성이 존재한다고 판단\n\n\n\n고차원 VAR 모델에서 변수 선택\n\n외생변수 포함하는 경우\n\nFAVOR\nm차원의 요인 \\(f_t\\)를 포함\n직접 관측 X, 최대가능도법 MLE, PCA로 추정\n\n내생변수가 매우 많은 경우\n\n축소 추정으로 VAR 학습\n베이지안 방법론 -&gt; 큰 계수 줄임\nLasso 와 같은 희소성 기법 활용\n\n특정 계수 \\(A_k\\)를 0으로 강제하여 중요하지 않은 변수 제거\n튜닝 파라미터 \\(\\lambda \\geq 0\\) 이 희소성 수준 조절\n값이 클수록 많은 계수 0으로\n$A^k_{ji} $인 k가 있어야함\n\nVAR 모델 손실함수를 정규화하여 해결하는 방식\n\n\n이후의 시도들\n\nBasu et al.\nDavis et al"
   },
   {
     "objectID": "about.html",
@@ -25,7 +25,7 @@
     "href": "index.html",
     "title": "poster2025",
     "section": "",
-    "text": "Date\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nMar 31, 2025\n\n\n4. 딥러닝 적합\n\n\n이상민 \n\n\n\n\nMar 31, 2025\n\n\n3. granger 논문 읽기\n\n\n이상민 \n\n\n\n\nMar 30, 2025\n\n\n2. 시각화 및 VAR 적합\n\n\n이상민 \n\n\n\n\nMar 24, 2025\n\n\n1. 2024 기상데이터 전처리\n\n\n이상민 \n\n\n\n\n\nNo matching items"
+    "text": "Date\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nMar 31, 2025\n\n\n4. 딥러닝 적합\n\n\n이상민 \n\n\n\n\nMar 31, 2025\n\n\n3. granger causality\n\n\n이상민 \n\n\n\n\nMar 30, 2025\n\n\n2. 시각화 및 VAR 적합\n\n\n이상민 \n\n\n\n\nMar 24, 2025\n\n\n1. 2024 기상데이터 전처리\n\n\n이상민 \n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/1.2024기상데이터전처리blog.html",
