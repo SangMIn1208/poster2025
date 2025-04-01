@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="이상민">
+<meta name="dcterms.date" content="2025-04-01">
 
-<title>poster2025</title>
+<title>5. Neural Granger Causality – poster2025</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +25,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4e350e956af7e737a589c4f4a516a570.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4e350e956af7e737a589c4f4a516a570.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -128,17 +99,17 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">poster2025</span>
     </a>
   </div>
@@ -149,7 +120,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
@@ -172,114 +143,81 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">poster2025</h1>
+    <div class="quarto-title column-body">
+      <h1 class="title">5. Neural Granger Causality</h1>
                       </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>이상민 </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 1, 2025</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(5)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<section id="linear-granger-causality" class="level3">
+<h3 class="anchored" data-anchor-id="linear-granger-causality">1. Linear Granger causality</h3>
+<ul>
+<li>Granger causality : 한 시계열의 과거 값이 다른 시계열이 미래 값을 예측하는데 도움이 되는지를 평가하는 개념</li>
+<li>VAR(Vector Autogressive Regression)모델
+<ul>
+<li>Granger causality를 분석하는 가장 기본적인 방법</li>
+<li>시계열 데이터 표현 <span class="math inline">\(x_t=\sum_{k=1}^{K}A^{(k)}x_{t-k}+\epsilon_t\)</span></li>
+<li><span class="math inline">\(x_{t}\)</span> : 시점 t에서의 다변량 시계열 데이터(p개의 변수 포함)</li>
+<li>k : 최대 시차</li>
+<li><span class="math inline">\(A^{(k)}\)</span> : 시차 k에서의 계수행렬(pxp크기)</li>
+<li><span class="math inline">\(e_t\)</span> : 평균이 0인 잡음</li>
+</ul></li>
+<li>인과성 판단 기준 - 특정 시계열 j가 다른 시계열 i의 미래를 예측하는데 기여하는지를 확인
+<ul>
+<li><span class="math inline">\(A^k_{ij}=0\)</span>이면, 시계열 j는 시계열 i에 대해 Granger 비인과적</li>
+<li><span class="math inline">\(A^k_{ij}\neq 0\)</span>이면, 시계열 j는 시계열 i에 대해 Granger 인과적</li>
+</ul></li>
+<li>희소성 유도 패널티 적용</li>
+<li>너무 많은 변수를 고려하면 과적합문제 발생-&gt;Lasso,Group Lasso 패널티를 적용하여 불필요한 계수 0으로
+<ul>
+<li>Group Lasso 패널티 : 결과적으로 희소한 Granger 인과 네트워크를 학습
+<ul>
+<li><span class="math inline">\(min_{A(1),...,A(K)}\sum_{t=K}^{T}||x_t-\sum_{k=1}^{K}A^{(k)}x_{t-k}||^2_2+\lambda\sum_{ij}||(A^{(1)}_{ij},...,A^{K}_{ij}||_2,\)</span></li>
+</ul></li>
+<li>계층적 패널티 : 너무 긴 시차를 사용하면 과적합이 발생할 수 있으므로 모델이 적절한 시차로 학습해아함</li>
+</ul></li>
+<li>VAR은 선형적 관계에서만 가정, 비선형 데이터는 한계</li>
+<li>–&gt; Neural Granger Causality 기법 필요</li>
+</ul>
+</section>
+<section id="models-for-neural-granger-causality" class="level3">
+<h3 class="anchored" data-anchor-id="models-for-neural-granger-causality">2. Models for Neural Granger Causality</h3>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-<th>
-Date
-</th>
-<th>
-Title
-</th>
-<th>
-Author
-</th>
-</tr>
-</thead>
-<tbody class="list">
-<tr data-index="0" data-listing-date-sort="1743465600000" data-listing-file-modified-sort="1743475870187" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="193" data-listing-title-sort="5. Neural Granger Causality" data-listing-filename-sort="5.NeuralGrangerCausality.ipynb">
-<td>
-<span class="listing-date">Apr 1, 2025</span>
-</td>
-<td>
-<a href="./posts/5.NeuralGrangerCausality.html" class="title listing-title">5. Neural Granger Causality</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="1" data-listing-date-sort="1743379200000" data-listing-file-modified-sort="1743468776317" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="824" data-listing-title-sort="3. Granger Causality" data-listing-filename-sort="3.GrangerCausality.ipynb">
-<td>
-<span class="listing-date">Mar 31, 2025</span>
-</td>
-<td>
-<a href="./posts/3.GrangerCausality.html" class="title listing-title">3. Granger Causality</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="2" data-listing-date-sort="1743379200000" data-listing-file-modified-sort="1743410589811" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1" data-listing-title-sort="4. 딥러닝 적합" data-listing-filename-sort="4.딥러닝적합.ipynb">
-<td>
-<span class="listing-date">Mar 31, 2025</span>
-</td>
-<td>
-<a href="./posts/4.딥러닝적합.html" class="title listing-title">4. 딥러닝 적합</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="3" data-listing-date-sort="1743292800000" data-listing-file-modified-sort="1743469362571" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="83" data-listing-title-sort="2. 시각화 및 VAR 적합" data-listing-filename-sort="2.시각화및VAR적합.ipynb">
-<td>
-<span class="listing-date">Mar 30, 2025</span>
-</td>
-<td>
-<a href="./posts/2.시각화및VAR적합.html" class="title listing-title">2. 시각화 및 VAR 적합</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-<tr data-index="4" data-listing-date-sort="1742774400000" data-listing-file-modified-sort="1743390803959" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="30" data-listing-title-sort="1. 2024 기상데이터 전처리" data-listing-filename-sort="1.2024기상데이터전처리blog.ipynb">
-<td>
-<span class="listing-date">Mar 24, 2025</span>
-</td>
-<td>
-<a href="./posts/1.2024기상데이터전처리blog.html" class="title listing-title">1. 2024 기상데이터 전처리</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
