@@ -9,7 +9,7 @@
 <meta name="author" content="이상민">
 <meta name="dcterms.date" content="2025-04-01">
 
-<title>5. Neural Granger Causality – poster2025</title>
+<title>4. Neural Granger Causality – poster2025</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -144,7 +144,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">5. Neural Granger Causality</h1>
+      <h1 class="title">4. Neural Granger Causality</h1>
                       </div>
   </div>
     
@@ -235,6 +235,12 @@ window.Quarto = {
 <li>기존과 다르게 입력 가중치에 대한 희소성 패널티를 추가해 Granger Causality 분석가능</li>
 <li>예시 : <span class="math inline">\(x_{ti}=g_i(x_{&lt;t1},...,x_{&lt;tp})+e_t\)</span></li>
 <li><span class="math inline">\(g_i(*)\)</span> 변수 <span class="math inline">\(i\)</span>에 대한 신경망 모델, 특정변수 <span class="math inline">\(j\)</span>가 <span class="math inline">\(i\)</span>에 영향을 미치지 않는다면, <span class="math inline">\(g_{-i}\)</span>에서 <span class="math inline">\(x_{&lt;tj}\)</span>에 대해 불변해야함</li>
+</ul></li>
+<li><p>3가지 모델 소개</p>
+<ul>
+<li>cLSTM</li>
+<li>cMLP</li>
+<li>cRNN</li>
 </ul></li>
 </ul>
 
