@@ -217,6 +217,11 @@ window.Quarto = {
 
 
 
+<section id="cmlp-crnn-clstm" class="level3">
+<h3 class="anchored" data-anchor-id="cmlp-crnn-clstm">1. cMLP, cRNN, cLSTM</h3>
+<p><code>-</code> cMLP * 완전연결 신견망(MLP) 기반 * 과거의 관측값을 입력으로 받아 비선형 함수를 통해 출력 생성 * 시계열 데이터에서, 시간적 정보는 고려하지 않고 독립적인 입력변수로 다룸 * 장점 : 계산량이 적고 단순 * 단점 : 시계열 특성 고려x(순서정보 반영하지 못함) <span class="math inline">\(\to\)</span> 장기 의존성 학습이 어려움 * <span class="math inline">\(\hat{X}_{t+1}=f_{\theta}(X_t,X_{t-1},...,X_{t-k})\)</span> * <span class="math inline">\(f_{\theta}\)</span> : MLP, k : 과거 시점 개수</p>
+<p><code>-</code> cRNN * 순환 신경망(RNN)을 기반, 시간 의존성 반영할 수 있음 * 과거 데이터의 상태를 <strong>은닉 상태</strong>에 저장하여 학습 * 장점 : 시계열 표현 잘 반영 * 단점 : 장기 의존성을 학습하기는 어려움(Vanishing Gradient 문제) * <span class="math inline">\(h_t=\sigma(W_th_{t-1}+W_xX_t)\)</span> * <span class="math inline">\(\hat{X}_{t+1}=f_{\theta}(h_t)\)</span> * <span class="math inline">\(h_t\)</span> : 은닉 상태, <span class="math inline">\(W_t, W_x\)</span> 는 가중치 행렬, <span class="math inline">\(\sigma\)</span> 는 활성화 함수</p>
+<p><code>-</code> cLSTM * 장기-단기 기억 네트워크를 기반으로 한 모델 * RNN 단점인 Vanishing Gradient 문제를 해결하여 장기 의존성 학습 가능 * 셀 상태와 게이트 구조를 사용하여 중요한 정보만 저장하고 불필요한 정보 삭제 * 단점 : 연산량이 많아 학습속도가 느릴 수 있음 * <span class="math inline">\(f_t = \sigma(W_f[h_{t-1},X_t]+b_f\)</span> * <span class="math inline">\(i_t = \sigma(W_i[h_{t-1},X_t]+b_i\)</span> * <span class="math inline">\(o_t = \sigma(W_o[h_{t-1},X_t]+b_o\)</span> * <span class="math inline">\(C_t=f_t \odot C_{t-1}+i_t \odot \tilde{C}_t\)</span> * <span class="math inline">\(h_t=o_t\odot tanh(C_t)\)</span> * <span class="math inline">\(f_t\)</span> : forget gate, <span class="math inline">\(i_t\)</span> : input gate, <span class="math inline">\(o_t\)</span> : output gate, <span class="math inline">\(C_t\)</span> : 셀 상태</p>
 <div id="fa376a82-ed67-4223-8633-45fbb029cb41" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -231,18 +236,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For GPU acceleration</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">'cuda'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<ul>
-<li>simulate_lorenz_96 함수는 Lorenz-96 모델을 시뮬레이션하여 데이터를 생성하는 함수</li>
-<li>기상학과 동역학 시스템에서 사용되는 비선형 동적 시스템 모델</li>
-<li>아래의 미분 방정식으로 정의
-<ul>
-<li><span class="math inline">\(\frac{dx_i}{dt}=(x_{i+1}-x_{i-2})x_{i-1}-x_i+F\)</span></li>
-</ul></li>
-<li>비선형 시스템으로 복잡한 시간적 변화를 모사</li>
-<li>기상 모델링과 같은 분야에서 사용</li>
-<li>혼돈 현상을 나타낼 수 있음</li>
-<li>p : 시스템의 차원(변수 개수), T: 시뮬레이션 시간길이, F : 외부 힘(혼돈 유발 파라미터)</li>
-</ul>
+<p><code>-</code> simulate_lorenz_96 함수는 Lorenz-96 모델을 시뮬레이션하여 데이터를 생성하는 함수 * 기상학과 동역학 시스템에서 사용되는 비선형 동적 시스템 모델 * 아래의 미분 방정식으로 정의 * <span class="math inline">\(\frac{dx_i}{dt}=(x_{i+1}-x_{i-2})x_{i-1}-x_i+F\)</span> * 비선형 시스템으로 복잡한 시간적 변화를 모사 * 기상 모델링과 같은 분야에서 사용 * 혼돈 현상을 나타낼 수 있음 * p : 시스템의 차원(변수 개수), T: 시뮬레이션 시간길이, F : 외부 힘(혼돈 유발 파라미터)</p>
 <div id="3d7f3df6-a37e-4911-b8c0-c3d72b177a92" class="cell" data-execution_count="71">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate data</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#X_np, GC = simulate_lorenz_96(p=10, F=10, T=1000)</span></span>
@@ -376,15 +370,11 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ul>
-<li>numpy 형태의 x,y지정</li>
-</ul>
+<p><code>-</code> numpy 형태의 x,y지정</p>
 <div id="6a472484-905c-458a-afbe-bc91c64d6264" class="cell" data-execution_count="50">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>X_np <span class="op">=</span> wt.iloc[:, <span class="dv">1</span>:].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<ul>
-<li>tensor형태로 변환</li>
-</ul>
+<p><code>-</code> tensor형태로 변환</p>
 <div id="7df849be-8e3e-410b-b6d7-e2a2708e91c6" class="cell" data-execution_count="53">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor(X_np[np.newaxis], dtype<span class="op">=</span>torch.float32, device<span class="op">=</span>device)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -420,21 +410,17 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ul>
-<li>X.shape[-1] : 컬럼의 개수, 여기서는 5</li>
-<li>hidden : LSTM의 은닉 상태 크기</li>
-</ul>
+<p><code>-</code> X.shape[-1] : 컬럼의 개수, 여기서는 5</p>
+<p><code>-</code> hidden : LSTM의 은닉 상태 크기</p>
 <div id="904649be-bdd3-48b6-87fd-aecc89964aba" class="cell" data-execution_count="59">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up model</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>clstm <span class="op">=</span> cLSTM(X.shape[<span class="op">-</span><span class="dv">1</span>], hidden<span class="op">=</span><span class="dv">100</span>).cuda(device<span class="op">=</span>device)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<ul>
-<li>context=n : 과거 n개의 타임스텝을 고려하여 학습</li>
-<li>lam, lam_ridge : 정규화 관련 하이퍼파라미터..그대로 둬도 무방</li>
-<li>lr : learning rate</li>
-<li>max_iter : 최대 몇 번의 반복동안 학습할지</li>
-<li>check_every : 모델 학습 과정에서 일정 간격마다 검증을 수행하는 주기</li>
-</ul>
+<p><code>-</code> context=n : 과거 n개의 타임스텝을 고려하여 학습</p>
+<p><code>-</code> lam, lam_ridge : 정규화 관련 하이퍼파라미터..그대로 둬도 무방</p>
+<p><code>-</code> lr : learning rate</p>
+<p><code>-</code> max_iter : 최대 몇 번의 반복동안 학습할지</p>
+<p><code>-</code> check_every : 모델 학습 과정에서 일정 간격마다 검증을 수행하는 주기</p>
 <div id="2fdbad5c-0244-44f8-aea6-3013d0a4927b" class="cell" data-execution_count="60">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train with ISTA</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>train_loss_list <span class="op">=</span> train_model_ista(</span>
@@ -495,12 +481,8 @@ Variable usage = 20.00%
 Stopping early</code></pre>
 </div>
 </div>
-<ul>
-<li><p>1000번 이하에서 early stopping이 발생</p></li>
-<li><p>loss값이 충분이 줄어들었거나</p></li>
-<li><p>loss 감소가 멈추었거나 -&gt;이걸로 보임</p></li>
-<li><p>이부분에서 데이터가 cuda 의 텐서여서 오류가 발생해 cpu, numpy로 변환</p></li>
-</ul>
+<p><code>-</code> 1000번 이하에서 early stopping이 발생 * loss값이 충분이 줄어들었거나 * loss 감소가 멈추었거나</p>
+<p><code>-</code> 이부분에서 데이터가 cuda 의 텐서여서 오류가 발생해 cpu, numpy로 변환</p>
 <div id="5fc6468e-e9da-4b35-9b20-745efbedac0f" class="cell" data-execution_count="61">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>train_loss_np <span class="op">=</span> np.array([loss.cpu().item() <span class="cf">for</span> loss <span class="kw">in</span> train_loss_list])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -573,16 +555,14 @@ Accuracy = 64.00%</code></pre>
 </div>
 </div>
 </div>
+<p><code>-</code> Granger Causality * 순서 : (기온 강수량 풍속 습도 일사) * GC 실제 변수 간의 인과 관계, GC_est 학습된 모델이 추정한 인과 관계 * 실제 GC와 추정된 GC_est를 비교하여 정확도(accuracy) 계산 * 불일치하는 인과관계는 빨간색으로 표시</p>
 <ul>
-<li><p>순서 : (기온 강수량 풍속 습도 일사)</p></li>
-<li><p>GC 실제 변수 간의 인과 관계, GC_est 학습된 모델이 추정한 인과 관계</p></li>
-<li><p>실제 GC와 추정된 GC_est를 비교하여 정확도(accuracy) 계산</p></li>
-<li><p>불일치하는 인과관계는 빨간색으로 표시</p></li>
-<li><p>실제 GC를 어떻게 설정해야하지…..</p></li>
-<li><p>왜이렇게 많이 틀렸지?? 뭔가 잘못 됐나</p></li>
+<li>실제 GC를 어떻게 설정해야하지…..</li>
+<li>왜이렇게 많이 틀렸지?? 뭔가 잘못 됐나</li>
 </ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

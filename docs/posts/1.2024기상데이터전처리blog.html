@@ -191,9 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fec5f7be-24e4-4ff6-b4b3-6f80f02e7256" class="cell" data-execution_count="54">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<ul>
-<li>데이터 불러오기</li>
-</ul>
+<p><code>-</code> 데이터 불러오기</p>
 <div id="802e69fd-6578-4bc6-ac6a-23d92ab07dff" class="cell" data-execution_count="55">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>wt<span class="op">=</span> pd.read_csv(<span class="st">"OBS_ASOS_TIM_20250322224121.csv"</span>,encoding<span class="op">=</span><span class="st">"cp949"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -346,9 +344,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<ul>
-<li>null값 확인</li>
-</ul>
+<p><code>-</code> null값 확인</p>
 <div id="0030fa5f-d08e-4c94-aba9-f6787fd0cd0b" class="cell" data-execution_count="57">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>wt.isnull().<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="57">
@@ -371,9 +367,7 @@ dtype: int64</code></pre>
       dtype='object')</code></pre>
 </div>
 </div>
-<ul>
-<li>필요없는 변수 제거</li>
-</ul>
+<p><code>-</code> 필요없는 변수 제거</p>
 <div id="4fdbe8ff-964b-4ada-8512-5484d798a14d" class="cell" data-execution_count="59">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>wt<span class="op">=</span>wt.drop(columns<span class="op">=</span>[<span class="st">'지점명'</span>,<span class="st">'지점'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -383,9 +377,7 @@ dtype: int64</code></pre>
 <pre><code>Index(['일시', '기온(°C)', '강수량(mm)', '풍속(m/s)', '습도(%)', '일사(MJ/m2)'], dtype='object')</code></pre>
 </div>
 </div>
-<ul>
-<li>column명 쉽게 변경</li>
-</ul>
+<p><code>-</code> column명 쉽게 변경</p>
 <div id="3453cb66-a185-4c93-a98f-10e615ef97a9" class="cell" data-execution_count="61">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>wt.columns<span class="op">=</span>[<span class="st">'일시'</span>,<span class="st">'기온'</span>,<span class="st">'강수량'</span>,<span class="st">'풍속'</span>,<span class="st">'습도'</span>,<span class="st">'일사'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -514,11 +506,9 @@ dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<ul>
-<li>null값 제거</li>
-<li>강수량, 일사 변수만 null값이 있기때문에 비가 안올 때, 밤에 0으로 측정이 안되었다고 판단</li>
-<li>0으로 채움</li>
-</ul>
+<p><code>-</code> null값 제거</p>
+<p><code>-</code> 강수량, 일사 변수만 null값이 있기때문에 비가 안올 때, 밤에 0으로 측정이 안되었다고 판단</p>
+<p><code>-</code> 0으로 채움</p>
 <div id="1ecb5c14-d059-4164-b20d-28511635a1bd" class="cell" data-execution_count="63">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>wt[[<span class="st">'강수량'</span>, <span class="st">'일사'</span>]] <span class="op">=</span> wt[[<span class="st">'강수량'</span>, <span class="st">'일사'</span>]].fillna(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -697,9 +687,7 @@ dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<ul>
-<li>csv 생성</li>
-</ul>
+<p><code>-</code> csv 생성</p>
 <div id="9a1739b8-f721-4a72-be0b-a161aefaffc3" class="cell" data-execution_count="66">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>wt.to_csv(<span class="st">'weather2024.csv'</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">'utf-8-sig'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>

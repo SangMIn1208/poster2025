@@ -183,125 +183,20 @@ window.Quarto = {
 <p>링크 : <a href="https://arxiv.org/abs/2105.02675">Granger Causality</a></p>
 <section id="granger-causality-a-review-and-recend-advances" class="level2">
 <h2 class="anchored" data-anchor-id="granger-causality-a-review-and-recend-advances">Granger Causality : A Review and Recend Advances</h2>
-<ul>
-<li><p>다양한 분야에서 시계열 간의 상호작용을 이해하는 것이 중요</p></li>
-<li><p>우리는 시계열 간의 인과적 상호작용을 이해하고자 하지만 실험이 불가능하고 현상에 대한 기계적 모델도 없는 상황에서 관측 데이터에 기반한 추론만 가능하다는 제한이 존재</p>
-<ul>
-<li>(미래를 모르기 때문에)</li>
-</ul></li>
-<li><p>이러한 경우, 시계열에 내재된 시간 순서성을 활용해, 과거가 미래에 영향을 준다는 방향으로 제한된 인과적 설명을 이끌어내는 프레임워크 제안</p></li>
-<li><p>시계열 <span class="math inline">\(y_{t}\)</span> 의 과거 값이 다른 시계열 <span class="math inline">\(x_{t}\)</span> 의 미래값을 얼마나 잘 예측할 수 있는지에 기반하여 인과성의 개념을 제안</p>
-<ul>
-<li>제한된 모델 : $Y_{t}=+ _{i=1}^{p} <em>iY</em>{t-i} + _t $
-<ul>
-<li>과거의 Y 값만 사용하여 <span class="math inline">\(Y_t\)</span>를 예측하는 모델</li>
-</ul></li>
-<li>확장된 모델 : $Y_{t}=+ <em>{i=1}^{p} <em>iY</em>{t-i} + </em>{j=1}^{q} Y_jX_{t-j} + _t $
-<ul>
-<li>과거의 Y값 뿐만 아니라 X의 과거 값까지 사용하여 예측</li>
-</ul></li>
-</ul></li>
-<li><p>제약</p>
-<ul>
-<li>real-valued time series with</li>
-<li>linear dynamics dependent on</li>
-<li>a knwn number of past lagged observations, with</li>
-<li>observations available at a fixed, discrete sampling rate that matches the time scale of the causal structure of interest</li>
-</ul></li>
-<li><p>“Granger Causality”는 단순한 예측 가능성을 의미</p></li>
-<li><p>Granger 에서 말하는 인과성은 진정한 인과관계 X</p></li>
-<li><p>Y의 과거 정보를 포함해서 X의 예측오차가 줄어들면 Y가 X의 Granger causality</p>
-<ul>
-<li><span class="math inline">\(H&lt;t\)</span> 시간 t 이전의 모든 정보 집합</li>
-<li><span class="math inline">\(P(X_t|H&lt;t)\)</span> 해당 정보 집합을 통한 x의 최적의 예측</li>
-<li><span class="math inline">\(var(x_t-P(x_t|H&lt;t))\)</span> $ &lt; $ <span class="math inline">\(var(x_t-P(x_t|H&lt;t / y&lt;t)\)</span></li>
-</ul></li>
-<li><p>VAR 모델 기반 Granger 모델</p></li>
-<li><p><span class="math inline">\(A^0x_t=\sum_{k=1}^{d}A^kX_{t-k}+\epsilon_{t}\)</span></p>
-<ul>
-<li>시간 t에서의 변수 벡터를 <span class="math inline">\(X_{t} =(x_1t, x_2t, ...x_pt)^T\)</span></li>
-<li><span class="math inline">\(A_{k}\)</span>는 시차(lag) : k에 대한 회귀계수 행렬</li>
-<li><span class="math inline">\(\epsilon_t\)</span> : 백색 잡음</li>
-</ul></li>
-<li><p>Granger 인과성의 기본가정(제한점) &lt;- 분석을 하기위해선 아래가정 충족해야함</p>
-<ul>
-<li>연속형 시계열</li>
-<li>선형성</li>
-<li>이산된 시간</li>
-<li>고정된 시차</li>
-<li>정상성</li>
-<li>완전한 관측(오차가 없어야함)</li>
-<li>관련된 모든 변수가 포함되어야함</li>
-</ul></li>
-<li><p>초기 Granger 인과성 검증 방법</p></li>
-<li><p>이변량 모델</p>
-<ul>
-<li><span class="math inline">\(a_{0x}*x_t=\sum_{k=1}^{d}a^{(k)}_{xx}x_{t-k}+\sum_{k=1}^{d}a^{(k)}_{xy}y_{t-k}+e_{t,x}\)</span></li>
-<li><span class="math inline">\(a_{0y}*y_t=\sum_{k=1}^{d}a^{(k)}_{yy}y_{t-k}+\sum_{k=1}^{d}a^{(k)}_{yx}x_{t-k}+e_{t,y}\)</span></li>
-</ul></li>
-<li><p>Reduced Model, Full model을 비교해 F검정 실시</p>
-<ul>
-<li><span class="math inline">\(F=\frac{(RSS_{red}-RSS_{full}/(r-s))}{RSS_{full}/(T-r)}\)</span></li>
-<li>귀무가설 <span class="math inline">\(H_{0} : Y_{t}는 X_{t} granger 원인이 아니다(Y_j=0)\)</span></li>
-<li>대립가설 <span class="math inline">\(H_{1} : Y_{t}는 X_{t} granger 원인이다(Y_j\neq0)\)</span></li>
-</ul></li>
-<li><p>전통적으로 선형 VAR 모델 가정으로 기반</p></li>
-<li><p>하지만 현실의 시스템은 훨씬 복잡하고 전통적 프레임은 한계점 존재</p>
-<ul>
-<li>이변량 모델을 사용하여 고차원 데이터는 정확하 분석 어려움</li>
-<li>비선형성과 비정규성 문제(VAR모델은 이러한 특성 반영 불가)</li>
-<li>불규칙 샘플링 및 관측 데이터 문제(고정된 시간 간격으로 수집, 현실에서는 다양한 주기로 변화 발생)</li>
-</ul></li>
-<li><p>해결을 위한 현대의 시도</p>
-<ul>
-<li>네트워크 Granger 인과성 : 여러개의 시계열 변수를 동시에 고려하여 다변량 인과성 분석</li>
-<li>비선형, 고차원 데이터 처리 : Lasso 및 Group Lasso 를 활용한 고차원 VAR모델, 딥러닝, 머신러닝 기법으로 비선형 인과성 분석</li>
-<li>비정상 시계열 및 혼합 주파수 데이터 처리 :
-<ul>
-<li>현실에서는 시계열 데이터가 동일하게 수집되지 않는 문제 해결기법 개발</li>
-<li>다중 시간 척도에서 데이터를 통합하여 Granger 인과성 분석</li>
-</ul></li>
-</ul></li>
-<li><p>네트워크 기반 Granger Causality</p>
-<ul>
-<li>다변량 시계열에서 여러 변수 간의 상호작용을 고려하여 인과관계 분석
-<ul>
-<li>이변량이 아닌 전체 변수(외생변수들의 영향 고려) 네트워크를 분석</li>
-<li>VAR 모델 활용
-<ul>
-<li><span class="math inline">\(x_t=\sum_{k=1}^{d}A^kX_{t-k}+\epsilon_t\)</span></li>
-<li><span class="math inline">\(A_k\)</span>의 특정요소가 0이 아니면 해당 변수간의 인과성이 존재한다고 판단</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><p>고차원 VAR 모델에서 변수 선택</p>
-<ul>
-<li>외생변수 포함하는 경우
-<ul>
-<li>FAVOR</li>
-<li>m차원의 요인 <span class="math inline">\(f_t\)</span>를 포함</li>
-<li>직접 관측 X, 최대가능도법 MLE, PCA로 추정</li>
-</ul></li>
-<li>내생변수가 매우 많은 경우
-<ul>
-<li>축소 추정으로 VAR 학습</li>
-<li>베이지안 방법론 -&gt; 큰 계수 줄임</li>
-<li>Lasso 와 같은 희소성 기법 활용
-<ul>
-<li>특정 계수 <span class="math inline">\(A_k\)</span>를 0으로 강제하여 중요하지 않은 변수 제거</li>
-<li>튜닝 파라미터 <span class="math inline">\(\lambda \geq 0\)</span> 이 희소성 수준 조절</li>
-<li>값이 클수록 많은 계수 0으로</li>
-<li>$A^k_{ji} $인 k가 있어야함</li>
-</ul></li>
-<li>VAR 모델 손실함수를 정규화하여 해결하는 방식</li>
-</ul></li>
-</ul></li>
-<li><p>이후의 시도들</p>
-<ul>
-<li>Basu et al.</li>
-<li>Davis et al</li>
-</ul></li>
-</ul>
+<p><code>-</code> 다양한 분야에서 시계열 간의 상호작용을 이해하는 것이 중요</p>
+<p><code>-</code> 우리는 시계열 간의 인과적 상호작용을 이해하고자 하지만 실험이 불가능하고 현상에 대한 기계적 모델도 없는 상황에서 관측 데이터에 기반한 추론만 가능하다는 제한이 존재 * (미래를 모르기 때문에)</p>
+<p><code>-</code> 이러한 경우, 시계열에 내재된 시간 순서성을 활용해, 과거가 미래에 영향을 준다는 방향으로 제한된 인과적 설명을 이끌어내는 프레임워크 제안</p>
+<p><code>-</code> 시계열 <span class="math inline">\(y_{t}\)</span> 의 과거 값이 다른 시계열 <span class="math inline">\(x_{t}\)</span> 의 미래값을 얼마나 잘 예측할 수 있는지에 기반하여 인과성의 개념을 제안 * 제한된 모델 : $Y_{t}=+ <em>{i=1}^{p} <em>iY</em>{t-i} + <em>t $ * 과거의 Y 값만 사용하여 <span class="math inline">\(Y_t\)</span>를 예측하는 모델 * 확장된 모델 : $Y</em>{t}=+ </em>{i=1}^{p} <em>iY</em>{t-i} + <em>{j=1}^{q} Y_jX</em>{t-j} + _t $ * 과거의 Y값 뿐만 아니라 X의 과거 값까지 사용하여 예측</p>
+<p><code>-</code> 제약 * real-valued time series with * linear dynamics dependent on * a knwn number of past lagged observations, with * observations available at a fixed, discrete sampling rate that matches the time scale of the causal structure of interest</p>
+<p><code>-</code> “Granger Causality”는 단순한 예측 가능성을 의미 * Granger 에서 말하는 인과성은 진정한 인과관계 X * Y의 과거 정보를 포함해서 X의 예측오차가 줄어들면 Y가 X의 Granger causality * <span class="math inline">\(H&lt;t\)</span> 시간 t 이전의 모든 정보 집합 * <span class="math inline">\(P(X_t|H&lt;t)\)</span> 해당 정보 집합을 통한 x의 최적의 예측 * <span class="math inline">\(var(x_t-P(x_t|H&lt;t))\)</span> $ &lt; $ <span class="math inline">\(var(x_t-P(x_t|H&lt;t / y&lt;t)\)</span></p>
+<p><code>-</code> VAR 모델 기반 Granger 모델 * <span class="math inline">\(A^0x_t=\sum_{k=1}^{d}A^kX_{t-k}+\epsilon_{t}\)</span> * 시간 t에서의 변수 벡터를 <span class="math inline">\(X_{t} =(x_1t, x_2t, ...x_pt)^T\)</span> * <span class="math inline">\(A_{k}\)</span>는 시차(lag) : k에 대한 회귀계수 행렬 * <span class="math inline">\(\epsilon_t\)</span> : 백색 잡음</p>
+<p><code>-</code> Granger 인과성의 기본가정(제한점) &lt;- 분석을 하기위해선 아래가정 충족해야함 * 연속형 시계열 * 선형성 * 이산된 시간 * 고정된 시차 * 정상성 * 완전한 관측(오차가 없어야함) * 관련된 모든 변수가 포함되어야함</p>
+<p><code>-</code> 초기 Granger 인과성 검증 방법 * 이변량 모델 * <span class="math inline">\(a_{0x}*x_t=\sum_{k=1}^{d}a^{(k)}_{xx}x_{t-k}+\sum_{k=1}^{d}a^{(k)}_{xy}y_{t-k}+e_{t,x}\)</span> * <span class="math inline">\(a_{0y}*y_t=\sum_{k=1}^{d}a^{(k)}_{yy}y_{t-k}+\sum_{k=1}^{d}a^{(k)}_{yx}x_{t-k}+e_{t,y}\)</span> * Reduced Model, Full model을 비교해 F검정 실시 * <span class="math inline">\(F=\frac{(RSS_{red}-RSS_{full}/(r-s))}{RSS_{full}/(T-r)}\)</span> * 귀무가설 <span class="math inline">\(H_{0} : Y_{t}는 X_{t} granger 원인이 아니다(Y_j=0)\)</span> * 대립가설 <span class="math inline">\(H_{1} : Y_{t}는 X_{t} granger 원인이다(Y_j\neq0)\)</span></p>
+<p><code>-</code> 전통적으로 선형 VAR 모델 가정으로 기반 * 하지만 현실의 시스템은 훨씬 복잡하고 전통적 프레임은 한계점 존재 * 이변량 모델을 사용하여 고차원 데이터는 정확하 분석 어려움 * 비선형성과 비정규성 문제(VAR모델은 이러한 특성 반영 불가) * 불규칙 샘플링 및 관측 데이터 문제(고정된 시간 간격으로 수집, 현실에서는 다양한 주기로 변화 발생)</p>
+<p><code>-</code> 해결을 위한 현대의 시도 * 네트워크 Granger 인과성 : 여러개의 시계열 변수를 동시에 고려하여 다변량 인과성 분석 * 비선형, 고차원 데이터 처리 : Lasso 및 Group Lasso 를 활용한 고차원 VAR모델, 딥러닝, 머신러닝 기법으로 비선형 인과성 분석 * 비정상 시계열 및 혼합 주파수 데이터 처리 : * 현실에서는 시계열 데이터가 동일하게 수집되지 않는 문제 해결기법 개발 * 다중 시간 척도에서 데이터를 통합하여 Granger 인과성 분석</p>
+<p><code>-</code> 네트워크 기반 Granger Causality * 다변량 시계열에서 여러 변수 간의 상호작용을 고려하여 인과관계 분석 * 이변량이 아닌 전체 변수(외생변수들의 영향 고려) 네트워크를 분석 * VAR 모델 활용 * <span class="math inline">\(x_t=\sum_{k=1}^{d}A^kX_{t-k}+\epsilon_t\)</span> * <span class="math inline">\(A_k\)</span>의 특정요소가 0이 아니면 해당 변수간의 인과성이 존재한다고 판단</p>
+<p><code>-</code> 고차원 VAR 모델에서 변수 선택 * 외생변수 포함하는 경우 * FAVOR * m차원의 요인 <span class="math inline">\(f_t\)</span>를 포함 * 직접 관측 X, 최대가능도법 MLE, PCA로 추정 * 내생변수가 매우 많은 경우 * 축소 추정으로 VAR 학습 * 베이지안 방법론 -&gt; 큰 계수 줄임 * Lasso 와 같은 희소성 기법 활용 * 특정 계수 <span class="math inline">\(A_k\)</span>를 0으로 강제하여 중요하지 않은 변수 제거 * 튜닝 파라미터 <span class="math inline">\(\lambda \geq 0\)</span> 이 희소성 수준 조절 * 값이 클수록 많은 계수 0으로 * $A^k_{ji} $인 k가 있어야함 * VAR 모델 손실함수를 정규화하여 해결하는 방식</p>
+<p><code>-</code> 이후의 시도들 * Basu et al. * Davis et al</p>
 
 
 </section>
