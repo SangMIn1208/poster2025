@@ -3,8 +3,8 @@
     "listing": "/index.html",
     "items": [
       "/posts/7.cRNN.html",
-      "/posts/5.cLSTM.html",
       "/posts/6.cMLP.html",
+      "/posts/5.cLSTM.html",
       "/posts/4.NeuralGrangerCausality.html",
       "/posts/3.GrangerCausality.html",
       "/posts/2.시각화및VAR적합.html",
