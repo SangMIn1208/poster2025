@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="이상민">
+<meta name="dcterms.date" content="2025-04-02">
 
-<title>poster2025</title>
+<title>7. cRNN – poster2025</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,27 +22,59 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4e350e956af7e737a589c4f4a516a570.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4e350e956af7e737a589c4f4a516a570.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,77 +102,22 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
 
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">poster2025</span>
     </a>
   </div>
@@ -149,7 +128,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
@@ -172,136 +151,235 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">poster2025</h1>
+    <div class="quarto-title column-body">
+      <h1 class="title">7. cRNN</h1>
                       </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>이상민 </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 2, 2025</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(7)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<div id="face0b9d-57ca-4b8c-8345-ad8e96a175ec" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> synthetic <span class="im">import</span> simulate_lorenz_96</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> models.crnn <span class="im">import</span> cRNN, train_model_ista</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="88272255-84a6-4cad-82b7-8f6cfeed289c" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="fa6bcb9e-52b9-4ec2-ba73-1ea26dad2fef" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For GPU acceleration</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">'cuda'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="6333f5ef-c555-4243-a7bc-4cf3f031a5ae" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#X_np, GC = simulate_lorenz_96(p=10, F=10, T=1000)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#X = torch.tensor(X_np[np.newaxis], dtype=torch.float32, device=device)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="03e8e78c-06db-470f-8568-7e43d73ff93a" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>wt <span class="op">=</span> pd.read_csv(<span class="st">"weather2024.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c453d61f-57b9-404c-90e5-1e68fc41b172" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
 
 
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<table class="quarto-listing-table table">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
-<tr>
-<th>
-Date
-</th>
-<th>
-Title
-</th>
-<th>
-Author
-</th>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">일시</th>
+<th data-quarto-table-cell-role="th">기온</th>
+<th data-quarto-table-cell-role="th">강수량</th>
+<th data-quarto-table-cell-role="th">풍속</th>
+<th data-quarto-table-cell-role="th">습도</th>
+<th data-quarto-table-cell-role="th">일사</th>
 </tr>
 </thead>
-<tbody class="list">
-<tr data-index="0" data-listing-date-sort="1743552000000" data-listing-file-modified-sort="1743641430735" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1" data-listing-title-sort="7. cRNN" data-listing-filename-sort="7.cRNN.ipynb">
-<td>
-<span class="listing-date">Apr 2, 2025</span>
-</td>
-<td>
-<a href="./posts/7.cRNN.html" class="title listing-title">7. cRNN</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2024-01-01 01:00</td>
+<td>3.8</td>
+<td>0.0</td>
+<td>1.5</td>
+<td>80</td>
+<td>0.0</td>
 </tr>
-<tr data-index="1" data-listing-date-sort="1743552000000" data-listing-file-modified-sort="1743641289263" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="342" data-listing-title-sort="5. cLSTM" data-listing-filename-sort="5.cLSTM.ipynb">
-<td>
-<span class="listing-date">Apr 2, 2025</span>
-</td>
-<td>
-<a href="./posts/5.cLSTM.html" class="title listing-title">5. cLSTM</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2024-01-01 02:00</td>
+<td>3.9</td>
+<td>0.0</td>
+<td>0.2</td>
+<td>79</td>
+<td>0.0</td>
 </tr>
-<tr data-index="2" data-listing-date-sort="1743552000000" data-listing-file-modified-sort="1743641418303" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1" data-listing-title-sort="6. cMLP" data-listing-filename-sort="6.cMLP.ipynb">
-<td>
-<span class="listing-date">Apr 2, 2025</span>
-</td>
-<td>
-<a href="./posts/6.cMLP.html" class="title listing-title">6. cMLP</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2024-01-01 03:00</td>
+<td>3.5</td>
+<td>0.0</td>
+<td>0.4</td>
+<td>84</td>
+<td>0.0</td>
 </tr>
-<tr data-index="3" data-listing-date-sort="1743465600000" data-listing-file-modified-sort="1743608937064" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="292" data-listing-title-sort="4. Neural Granger Causality" data-listing-filename-sort="4.NeuralGrangerCausality.ipynb">
-<td>
-<span class="listing-date">Apr 1, 2025</span>
-</td>
-<td>
-<a href="./posts/4.NeuralGrangerCausality.html" class="title listing-title">4. Neural Granger Causality</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2024-01-01 04:00</td>
+<td>1.9</td>
+<td>0.0</td>
+<td>1.1</td>
+<td>92</td>
+<td>0.0</td>
 </tr>
-<tr data-index="4" data-listing-date-sort="1743292800000" data-listing-file-modified-sort="1743608898936" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="626" data-listing-title-sort="3. Granger Causality" data-listing-filename-sort="3.GrangerCausality.ipynb">
-<td>
-<span class="listing-date">Mar 30, 2025</span>
-</td>
-<td>
-<a href="./posts/3.GrangerCausality.html" class="title listing-title">3. Granger Causality</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2024-01-01 05:00</td>
+<td>1.4</td>
+<td>0.0</td>
+<td>1.5</td>
+<td>94</td>
+<td>0.0</td>
 </tr>
-<tr data-index="5" data-listing-date-sort="1743206400000" data-listing-file-modified-sort="1743607934178" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="63" data-listing-title-sort="2. 시각화 및 VAR 적합" data-listing-filename-sort="2.시각화및VAR적합.ipynb">
-<td>
-<span class="listing-date">Mar 29, 2025</span>
-</td>
-<td>
-<a href="./posts/2.시각화및VAR적합.html" class="title listing-title">2. 시각화 및 VAR 적합</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
 </tr>
-<tr data-index="6" data-listing-date-sort="1742774400000" data-listing-file-modified-sort="1743584216734" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="30" data-listing-title-sort="1. 2024 기상데이터 전처리" data-listing-filename-sort="1.2024기상데이터전처리blog.ipynb">
-<td>
-<span class="listing-date">Mar 24, 2025</span>
-</td>
-<td>
-<a href="./posts/1.2024기상데이터전처리blog.html" class="title listing-title">1. 2024 기상데이터 전처리</a>
-</td>
-<td>
-<span class="listing-author">이상민 </span>
-</td>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8755</td>
+<td>2024-12-30 20:00</td>
+<td>7.6</td>
+<td>0.0</td>
+<td>1.4</td>
+<td>71</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8756</td>
+<td>2024-12-30 21:00</td>
+<td>7.5</td>
+<td>0.0</td>
+<td>1.7</td>
+<td>69</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8757</td>
+<td>2024-12-30 22:00</td>
+<td>7.2</td>
+<td>0.0</td>
+<td>1.2</td>
+<td>70</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8758</td>
+<td>2024-12-30 23:00</td>
+<td>7.2</td>
+<td>0.0</td>
+<td>1.7</td>
+<td>71</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8759</td>
+<td>2024-12-31 00:00</td>
+<td>7.4</td>
+<td>0.0</td>
+<td>2.8</td>
+<td>70</td>
+<td>0.0</td>
 </tr>
 </tbody>
 </table>
-<div class="listing-no-matching d-none">
-No matching items
+
+<p>8760 rows × 6 columns</p>
 </div>
-</div></main> <!-- /main -->
+</div>
+</div>
+<div id="8f7f56cb-7b13-448a-9c07-b5cbf458a0ce" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>X_np <span class="op">=</span> wt.iloc[:, <span class="dv">1</span>:].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="0e858e30-0ee7-459f-8f50-9f45582a3e3e" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor(X_np[np.newaxis], dtype<span class="op">=</span>torch.float32, device<span class="op">=</span>device)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="4f07548f-c372-4d59-b76d-69eb292c0096" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up model</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>crnn <span class="op">=</span> cRNN(X.shape[<span class="op">-</span><span class="dv">1</span>], hidden<span class="op">=</span><span class="dv">100</span>).cuda(device<span class="op">=</span>device)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b63f6e97-2de0-4b89-8d12-5c675a6df1e5" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train with ISTA</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>train_loss_list <span class="op">=</span> train_model_ista(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    crnn, X, context<span class="op">=</span><span class="dv">10</span>, lam<span class="op">=</span><span class="fl">10.0</span>, lam_ridge<span class="op">=</span><span class="fl">1e-2</span>, lr<span class="op">=</span><span class="fl">1e-3</span>, max_iter<span class="op">=</span><span class="dv">20000</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    check_every<span class="op">=</span><span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>----------Iter = 50----------
+Loss = nan
+Variable usage = 8.00%</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[28], line 2</span>
+<span class="ansi-green-fg ansi-bold">      1</span> <span style="font-style:italic;color:rgb(95,135,135)"># Train with ISTA</span>
+<span class="ansi-green-fg">----&gt; 2</span> train_loss_list <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">train_model_ista</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg ansi-bold">      3</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">crnn</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">X</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">context</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">10</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">lam</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">10.0</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">lam_ridge</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">1e-2</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">lr</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">1e-3</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">max_iter</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">20000</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg ansi-bold">      4</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">check_every</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">50</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">~/python_project/3-1/poster/Neural-GC/models/crnn.py:505</span>, in <span class="ansi-cyan-fg">train_model_ista</span><span class="ansi-blue-fg">(crnn, X, context, lr, max_iter, lam, lam_ridge, lookback, check_every, verbose)</span>
+<span class="ansi-green-fg ansi-bold">    503</span>     best_it <span style="color:rgb(98,98,98)">=</span> it
+<span class="ansi-green-fg ansi-bold">    504</span>     best_model <span style="color:rgb(98,98,98)">=</span> deepcopy(crnn)
+<span class="ansi-green-fg">--&gt; 505</span> <span style="font-weight:bold;color:rgb(0,135,0)">elif</span> (<span class="ansi-yellow-bg">it</span><span class="ansi-yellow-bg"> </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">-</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">best_it</span>) <span style="color:rgb(98,98,98)">==</span> lookback <span style="color:rgb(98,98,98)">*</span> check_every:
+<span class="ansi-green-fg ansi-bold">    506</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> verbose:
+<span class="ansi-green-fg ansi-bold">    507</span>         <span style="color:rgb(0,135,0)">print</span>(<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">Stopping early</span><span style="color:rgb(175,0,0)">'</span>)
+
+<span class="ansi-red-fg">TypeError</span>: unsupported operand type(s) for -: 'int' and 'NoneType'</pre>
+</div>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
