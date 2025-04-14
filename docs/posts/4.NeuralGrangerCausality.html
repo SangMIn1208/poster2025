@@ -191,8 +191,9 @@ window.Quarto = {
 <ul>
 <li><strong>Granger causality</strong>는 어떤 변수의 과거가 다른 변수의 미래를 예측하는데 도움이 되는지 보는 것</li>
 <li>기존의 대부분의 방법은 <strong>선형 모델(VAR)</strong> 사용 <span class="math inline">\(\to\)</span> 비선형관계 잡지 못함</li>
+<li>시간 지연을 명시적으로 지정해야함 <span class="math inline">\(\to\)</span> 너무 작으면 긴 시간지연에서의 Granger인과관계 누락, 너무 크면 과적합 발생 가능</li>
 <li><strong>Component-wise neural nets</strong>(각 출력 변수마다 독립적인 MLP 또는 LSTM) + <strong>structured sparsity penalty</strong>를 통해 해석 가능한 인과 구조를 학습</li>
-<li>특히 <strong>Group Lasso, Hierarchical Group Lasso</strong> 등을 통해 특정 변수의 영향력 제거</li>
+<li>특히 <strong>Group Lasso, Hierarchical Group Lasso</strong> 등을 통해 특정 변수의 영향력 제거 <span class="math inline">\(\to\)</span> 과적합 방지, 시간 지연 자동으로 선택</li>
 <li>DREAM3 유전자 네트워크, 인간 동작 데이터 등에 적용하여 뛰어난 성능을 보임</li>
 </ul>
 </section>
@@ -203,9 +204,10 @@ window.Quarto = {
 <ul>
 <li>Granger causality를 분석하는 가장 기본적인 방법</li>
 <li>시계열 데이터 표현 <span class="math inline">\(x_t=\sum_{k=1}^{K}A^{(k)}x_{t-k}+\epsilon_t\)</span></li>
-<li><span class="math inline">\(x_{t}\)</span> : 시점 t에서의 다변량 시계열 데이터(p개의 변수 포함)</li>
+<li><span class="math inline">\(x_{t}\)</span> : 시점 t에서의 다변량 시계열 데이터(p개의 변수 포함) (p x 1)</li>
 <li>k : 최대 시차</li>
-<li><span class="math inline">\(A^{(k)}\)</span> : 시차 k에서의 계수행렬(pxp크기)</li>
+<li><span class="math inline">\(x_{t-k}\)</span> : 변수들의 과거값 행렬 (p x k)</li>
+<li><span class="math inline">\(A^{(k)}\)</span> : 시차 k에서의 각 변수간의 Granger 계수행렬(p x p크기)</li>
 <li><span class="math inline">\(e_t\)</span> : 평균이 0인 잡음</li>
 </ul>
 <p><code>-</code> 인과성 판단 기준 - 특정 시계열 j가 다른 시계열 i의 미래를 예측하는데 기여하는지를 확인</p>
@@ -213,20 +215,49 @@ window.Quarto = {
 <li><span class="math inline">\(A^k_{ij}=0\)</span>이면, 시계열 j는 시계열 i에 대해 Granger 비인과적</li>
 <li><span class="math inline">\(A^k_{ij}\neq 0\)</span>이면, 시계열 j는 시계열 i에 대해 Granger 인과적</li>
 </ul>
+<p><code>-</code> 장점</p>
+<ul>
+<li>간단하고 해석이 쉬움</li>
+<li>수학적으로 정립되어있고 검정도 가능</li>
+</ul>
+<p><code>-</code> 단점(<span class="math inline">\(\to\)</span> Neural Granger 등장배경)</p>
+<ul>
+<li>선형성 가정
+<ul>
+<li>현실 데이터는 대부분 비선형, 선형 구조만 모델링 가능</li>
+</ul></li>
+<li>고정된 lag 수 K 지정
+<ul>
+<li>어떤 시계열은 짧은 lag, 어떤 시계열은 긴 lag에 반응할 수 있는데</li>
+<li>모두 동일한 K를 적용함</li>
+</ul></li>
+<li>고차원 문제에 취약
+<ul>
+<li>변수가 많아지만 VAR파라미터 수도 폭발적 증가</li>
+<li>과적합 위험</li>
+</ul></li>
+</ul>
+<p><code>-</code> 희소성 유도 패널티</p>
+<ul>
+<li>모델의 가중치 중 일부를 정확히 0으로 만드는 정규화 기법</li>
+<li>모델이 불필요한 입력을 자동으로 제거하도록 유도하는 제약</li>
+<li>모든 변수들이 서로 영향을 주지 않음, 대부분의 관계는 0인 것이 보통</li>
+</ul>
 <p><code>-</code> 희소성 유도 패널티 적용</p>
 <ul>
-<li>너무 많은 변수를 고려하면 과적합문제 발생-&gt;Lasso,Group Lasso 패널티를 적용하여 불필요한 계수 0으로
+<li>너무 많은 변수를 고려하면 과적합문제 발생 <span class="math inline">\(\to\)</span> Lasso,Group Lasso 패널티를 적용하여 불필요한 계수 0으로
 <ul>
 <li>Group Lasso 패널티 : 결과적으로 희소한 Granger 인과 네트워크를 학습
 <ul>
 <li><span class="math inline">\(min_{A(1),...,A(K)}\sum_{t=K}^{T}||x_t-\sum_{k=1}^{K}A^{(k)}x_{t-k}||^2_2+\lambda\sum_{ij}||(A^{(1)}_{ij},...,A^{K}_{ij}||_2,\)</span></li>
+<li>첫 항 : 예측오차 최소화</li>
+<li>둘째 항 : 정규화 항 = 희소성 유도 패널티</li>
+<li>그룹라쏘는 각 시계열 쌍(i,j)에 대해 모든 시간지연 k에 해당하는 계수들을 하나의 그룹으로 보고 동시에 0으로 수축시킴</li>
+<li>입력변수 j의 모든 lag가 출력변수 i에 영향을 주지 않으면 모두 0이 됨 <span class="math inline">\(\to\)</span> Granger 인과성 없음</li>
+<li><span class="math inline">\(\lambda\)</span> : 패널티 강도(크면 더 많은 항이 0)</li>
 </ul></li>
-<li>계층적 패널티 : 너무 긴 시차를 사용하면 과적합이 발생할 수 있으므로 모델이 적절한 시차로 학습해아함</li>
+<li>Hierarhical Group Lasso 패널티 : 단순히 인과관계 유무만 판단하는 것이 아니라 인과관계 lag도 자동으로 선택해줌</li>
 </ul></li>
-</ul>
-<p><code>-</code> VAR은 선형적 관계에서만 가정, 비선형 데이터는 한계</p>
-<ul>
-<li><span class="math inline">\(\to\)</span> Neural Granger Causality 기법 필요</li>
 </ul>
 </section>
 <section id="models-for-neural-granger-causality" class="level3">
@@ -238,14 +269,14 @@ window.Quarto = {
 <li><strong>NAR</strong> : 기존의 선형 VAR보다 훨씬 유연하게 과거-현재 관계 표현가능</li>
 <li><span class="math inline">\(x_t=g(x_{&lt;t1},...,x_{&lt;tp})+\epsilon_t\)</span></li>
 <li><span class="math inline">\(x_t\)</span> : 시점 t에서의 다변량 시계열 데이터</li>
-<li><span class="math inline">\(x_{&lt;t1},...,x_{&lt;tp}\)</span> : 과거 p개의 시점에서 수집된 데이터</li>
+<li><span class="math inline">\(x_{&lt;t1},...,x_{&lt;tp}\)</span> : <span class="math inline">\(x_{tj}\)</span> 시계열 j의 과거값들</li>
 <li><span class="math inline">\(g(*)\)</span> : <strong>비선형 함수</strong>(ex: 신경망)</li>
 <li><span class="math inline">\(e_t\)</span> : 평균이 0인 잡음(noise)</li>
 </ul>
 <p><code>-</code> Problem</p>
 <ul>
 <li>블랙박스 문제 : MLP/LSTM은 강력한 예측성능을 가지지만 전체 시계열을 한번에 모델링(출력 <span class="math inline">\(x_t\)</span>를 하나의 신경망으로 학습) <span class="math inline">\(\to\)</span> 특정 입력 <span class="math inline">\(x_j\)</span>가 특정 출력 <span class="math inline">\(x_i\)</span>에 어떤 영향을 주는지 분리 어려움(숨겨진 층들을 공유하기 때문)</li>
-<li>모든 출력이 같은 <strong>시간지연(lag)</strong>에 의존한다고 가 : 전통적인 VAR모델에서는 최대 시차 k를 설정, 일반적 NAR 딥러닝 모델에서는 입력으로 같은 시간지연만 넣음
+<li>모든 출력이 같은 <strong>시간지연(lag)</strong> 에 의존한다고 가정 : 전통적인 VAR모델에서는 최대 시차 k를 설정, 일반적 NAR 딥러닝 모델에서는 입력으로 같은 시간지연만 넣음
 <ul>
 <li>모든 시계열이 지난 3시점만 (t-1, t-2, t-3)</li>
 <li>하지만 어떤 변수는 짧은 lag, 어떤 변수는 긴 lag에 의존할 수 있음</li>
@@ -260,13 +291,13 @@ window.Quarto = {
 <li>출력을 하나하나 분리해서 학습</li>
 <li>이러한 구조를 component-wise architecture(그래서 모델 이름 cMLP,cLSTM)</li>
 </ul></li>
-<li>장점 : 입력 시계열이 어떤 출력에 영향을 주는지 쉽게 해석 가능, 각 <span class="math inline">\(g_i\)</span>함수에만 집중하면 되기 때문에 인과 추론이 쉬워짐</li>
+<li>장점 : 어떤 입력 시계열이 출력에 영향을 주는지 쉽게 해석 가능, 각 <span class="math inline">\(g_i\)</span>함수에만 집중하면 되기 때문에 인과 추론이 쉬워짐</li>
 </ul>
 <p><code>-</code> Granger Non-Causality</p>
 <ul>
 <li>시계열 j가 시계열 i의 Granger 원인이 아니다 <span class="math inline">\(\leftrightarrow\)</span> <span class="math inline">\(g_i\)</span> 함수가 <span class="math inline">\(x_j\)</span>의 과거에 전혀 의존하지 않음</li>
 <li><span class="math inline">\(g_i(x_{t1},...,x_{tj},...x_{tp}) = g_i(x_{&lt;ti},...,x^{'}_{&lt;tj},...,x_{tp})\)</span></li>
-<li>여기서 <span class="math inline">\(x_{&lt;,tj} \neq x^{'}_{tj}\)</span>임에도 결과는 같음</li>
+<li>여기서 <span class="math inline">\(x_{&lt;tj} \neq x^{'}_{&lt;tj}\)</span>임에도 결과는 같음</li>
 <li>즉, <span class="math inline">\(x_j\)</span>의 과거가 바뀌어도 <span class="math inline">\(x_{ti}\)</span> 예측에 아무 영향이 없음</li>
 </ul>
 </section>
@@ -301,7 +332,7 @@ window.Quarto = {
 <li>Group Lasso : 입력 시계열 j의 모든 지연에 대한 가중치를 하나의 그룹으로 보고, 그룹 전체를 0으로 만듦 <span class="math inline">\(\to\)</span> 시계열 j 전체를 삭제할지 말지 결정</li>
 <li>Sparse Group Lasso
 <ul>
-<li>그룹간 sparsity + 그룹 내 sparsity 둘 다 유도</li>
+<li>더 유연하고 미세한 제어 가능</li>
 <li>일부 시계열은 완전 제거, 일부는 특정 lag만 유지</li>
 <li><span class="math inline">\(\alpha\)</span> : 전체 sparsity vs lag 선택간의 조절 파라미터</li>
 </ul></li>
@@ -309,6 +340,7 @@ window.Quarto = {
 <ul>
 <li>특정 lag 이상은 모두 제거되도록 하는 penalty</li>
 <li>lag 선택이 자연스럽게 이루어짐, 가중치 0인 관련없는 lag 자동으로 제거</li>
+<li>만약 lag 3의 가중치를 없애려면 lag 4,5…도 자동으로 없어져야함</li>
 <li><span class="math inline">\(\to\)</span> lag를 크게 설정해도 됨</li>
 </ul></li>
 </ul>
@@ -332,7 +364,7 @@ window.Quarto = {
 </ul>
 <p><code>-</code> Granger causality 추론 방법</p>
 <ul>
-<li>시계열 j가 출력 <span class="math inline">\(x_{ti}\)</span>에 영향을 주지 않으려면 입력 자중치 행렬 W의 j번째 column이 모두 0이 되면 됨
+<li>시계열 j가 출력 <span class="math inline">\(x_{ti}\)</span>에 영향을 주지 않으려면 입력 가중치 행렬 W의 j번째 column이 모두 0이 되면 됨
 <ul>
 <li><span class="math inline">\(W_{:,j}=0\)</span> <span class="math inline">\(\to\)</span> 시계열 j는 i의 Granger 원인이 아님</li>
 </ul></li>
@@ -457,15 +489,53 @@ window.Quarto = {
 <h5 class="anchored" data-anchor-id="lorenz-96-모델-실험">6.1.1 Lorenz-96 모델 실험</h5>
 <ul>
 <li>비선형적 다변량 동적 시스템</li>
-<li>기후 모델링 등에 사용</li>
 <li><span class="math inline">\(\frac{dx_{ti}}{dt}=(x_{t(i+1)}-x_{t(i-2)})x_{t(i-1)}-x_{ti}+F\)</span></li>
 <li>F : 혼란스러움 조절 파라미터 <span class="math inline">\(F∈\{10,40\}\)</span>
 <ul>
 <li>F=10 : 덜 복잡</li>
 <li>F=40 : 더 chaotic</li>
 </ul></li>
-<li>차원 <span class="math inline">\(p=20\)</span>, 시계열 길이 <span class="math inline">\(T∈\{250,500,1000\}\)</span></li>
-<li>각 설정마다 5번 반복하고 평균을 냈음 | Model | T=250 | T=500 | T=1000 | |—————-|——-|——-|——–| | cMLP (F=10) | 86.6 | 96.6 | 98.4 | | cLSTM (F=10) | 81.3 | 93.4 | 96.0 | | cMLP (F=40) | 84.0 | 89.6 | 95.5 | | cLSTM (F=40) | 75.1 | 87.8 | 94.4 |</li>
+<li>차원(변수 개수) <span class="math inline">\(p=20\)</span>, 시계열 길이 <span class="math inline">\(T∈\{250,500,1000\}\)</span></li>
+<li>cMLP 시차 lag K=5, hierarchical penalty 사용</li>
+<li>각 설정마다 5번 반복하고 평균을 냈음</li>
+</ul>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>T=250</th>
+<th>T=500</th>
+<th>T=1000</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>cMLP (F=10)</td>
+<td>86.6</td>
+<td>96.6</td>
+<td>98.4</td>
+</tr>
+<tr class="even">
+<td>cLSTM (F=10)</td>
+<td>81.3</td>
+<td>93.4</td>
+<td>96.0</td>
+</tr>
+<tr class="odd">
+<td>cMLP (F=40)</td>
+<td>84.0</td>
+<td>89.6</td>
+<td>95.5</td>
+</tr>
+<tr class="even">
+<td>cLSTM (F=40)</td>
+<td>75.1</td>
+<td>87.8</td>
+<td>94.4</td>
+</tr>
+</tbody>
+</table>
+<ul>
 <li>전반적으로 <strong>cMLP</strong>가 높은 정확도 <strong>(AUROC)-Grangr 인과구조 복원 정확도</strong> 를 보임</li>
 <li>데이터가 많아질수록 성능이 비슷해짐</li>
 </ul>
@@ -473,14 +543,60 @@ window.Quarto = {
 <section id="var-모델-실험" class="level5">
 <h5 class="anchored" data-anchor-id="var-모델-실험">6.1.2 VAR 모델 실험</h5>
 <ul>
+<li>Granger 인과 구조가 정확히 정의된 데이터셋 생성</li>
+<li>모델 생성시 lag 1 , lag 2 두가지 생성 VAR(1), VAR(2)</li>
 <li>선형 시계열 모델, 각 시계열이 다른 시계열들의 과거값에 선형적으로 영향을 받음</li>
 <li><span class="math inline">\(x_t = A_1x_{t-1}+A_2x_{t-2}+...+A_kx_{t-k}+\epsilon_t\)</span></li>
 <li><span class="math inline">\(A_k\)</span> : 계수 행렬</li>
-<li>Ground truth Granger 구조가 정확히 알려져 있는 상황에서 테스트 가능</li>
 <li>차원 <span class="math inline">\(p=10\)</span>, 시계열 길이 <span class="math inline">\(T∈\{250,500,1000\}\)</span></li>
-<li>lag K=3 | Model | T=250 | T=500 | T=1000 | |—————-|——-|——-|——–| | cMLP | 94.6 | 98.7 | 99.5 | | cLSTM | 91.1 | 96.6 | 99.2 |</li>
-<li>둘다 매우 높은 정확도</li>
+<li>lag K=3</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 15%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>T=250 (VAR1)</th>
+<th>T=500 (VAR1)</th>
+<th>T=1000 (VAR1)</th>
+<th>T=250 (VAR2)</th>
+<th>T=500 (VAR2)</th>
+<th>T=1000 (VAR2)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>cMLP</strong></td>
+<td>91.6</td>
+<td>94.9</td>
+<td>98.4</td>
+<td>84.4</td>
+<td>88.3</td>
+<td>95.1</td>
+</tr>
+<tr class="even">
+<td><strong>cLSTM</strong></td>
+<td>88.5</td>
+<td>93.4</td>
+<td>97.6</td>
+<td>83.5</td>
+<td>92.5</td>
+<td>97.8</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>둘다 매우 높은 정확도, T가 클수록 성능 향상</li>
 <li>적은 데이터일수록 cMLP가 안정적으로 좋음</li>
+<li>데이터가 많으면 cLSTM이 좋을 때도 있음</li>
 </ul>
 <p><code>-</code> 해석</p>
 <ul>
@@ -490,11 +606,89 @@ window.Quarto = {
 </ul>
 </section>
 </section>
+<section id="quantitative-analysis-of-the-hierarchical-penalty" class="level4">
+<h4 class="anchored" data-anchor-id="quantitative-analysis-of-the-hierarchical-penalty">6.2 Quantitative Analysis of the Hierarchical penalty</h4>
+<p><code>-</code> 목적</p>
+<ul>
+<li>Hierarchical Group Lasso penalty가 lag 선택과 Granger 인과관계 복원에 어떤영향을 주는지 정량적 평가하기 위한 실험</li>
+<li>Lorenz-95 시뮬레이션 데이터 사용</li>
+<li>입력 lag수 K를 다르게 설정하여 세가지 패널티 방식 비교</li>
+</ul>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Lag K</th>
+<th>5</th>
+<th>10</th>
+<th>10</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>GROUP</strong></td>
+<td>88.1</td>
+<td>82.5</td>
+<td>80.5</td>
+</tr>
+<tr class="even">
+<td><strong>MIXED</strong></td>
+<td>90.1</td>
+<td>85.4</td>
+<td>83.3</td>
+</tr>
+<tr class="odd">
+<td><strong>HIER</strong></td>
+<td><strong>95.5</strong></td>
+<td><strong>95.4</strong></td>
+<td><strong>95.2</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>-</code> 결과해석</p>
+<ul>
+<li>GROUP 과 MIXED는 <code>lag</code>가 커질수록 성능 떨어짐
+<ul>
+<li>overfitting 또는 noise</li>
+</ul></li>
+<li>HIER은 거의 떨어지지 않음
+<ul>
+<li><span class="math inline">\(\to\)</span> lag가 커도 불필요한 lag를 자동으로 제거</li>
+<li>최적 lag 수를 지정할 필요 없어짐</li>
+</ul></li>
+</ul>
+</section>
 <section id="real-motion-capture-data" class="level4">
 <h4 class="anchored" data-anchor-id="real-motion-capture-data">6.2 Real Motion Capture Data</h4>
 <p><code>-</code> 목적</p>
 <ul>
-<li></li>
+<li>실제 인간의 움직임 데이터를 이용해 Neural Granger Causality 모델들이 현실 데이터에서 잘 작동하는지 확인</li>
+</ul>
+<p><code>-</code> 분석하고자 한 것</p>
+<ul>
+<li>우리가 알고 있는 신체의 구조적 연결(관절 간 영향)과</li>
+<li>모델이 학습한 Granger 인과 구조가 유사한지 비교</li>
+</ul>
+<p><code>-</code> 데이터 : MoCap(Motion Capture)</p>
+<ul>
+<li>한 사람의 걷는 동작을 포착한 데이터</li>
+<li>15개의 관절의 위치 시계열로 구성됨</li>
+<li>각 관절 = 하나의 시계열 변수(15차원)</li>
+<li>전처리 : 0~1사이로 정규화</li>
+<li>1600시점 사용</li>
+</ul>
+<p><code>-</code> 실험 설정</p>
+<ul>
+<li>모델 : cMLP, cLSTM</li>
+<li>희소성 정규화 : Hierarchical Group Lasso(lag 자동 선택!)</li>
+<li>최대 lag : K=5</li>
+<li>학습데이터 길이 : 약 1600</li>
+</ul>
+<p><code>-</code> 결과 분석</p>
+<ul>
+<li>cMLP
+<ul>
+<li>Hierarchical group lasso를 통해 어떤 관절의 어떤 시간지연이 중요한지 해석 가능</li>
+</ul></li>
 </ul>
 <hr>
 
