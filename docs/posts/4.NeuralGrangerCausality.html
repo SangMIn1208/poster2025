@@ -391,27 +391,41 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="optimizing-the-penalized-objectives">4. Optimizing the Penalized Objectives</h3>
 <section id="optimizing-the-penalized-cmlp-objective" class="level4">
 <h4 class="anchored" data-anchor-id="optimizing-the-penalized-cmlp-objective">4.1 Optimizing the Penalized cMLP Objective</h4>
-<p><code>-</code> 최적화 방법 : Proximal Gradient Descent</p>
+<p><code>-</code> 최적화 방법 : Proximal Gradient Descent (proximal : 중심의)</p>
 <ul>
 <li>희소성 penalty 미분 불가능 or , 정확이 0이되는 가중치 만들기 어려움 <span class="math inline">\(\to\)</span> sparsity를 정확히 유도하기 어려움</li>
 <li>Proximal Gradient는 <code>가중치가 딱 0이 되도록</code> 업데이트</li>
 <li>알고리즘 구조
 <ul>
 <li>현재 가중치 <span class="math inline">\(W^m\)</span>에 대해 손실함수 <span class="math inline">\(L(W)\)</span>의 gradient 계산</li>
-<li>gradient만큼 이동</li>
-<li>proximal 연산(prox)으로 sparsity penalty를 반영한 업데이트</li>
+<li>gradient만큼 이동(평범한 업데이트)</li>
+<li>proximal 연산(prox)으로 sparsity penalty를 반영한 업데이트(정규화 적용)</li>
 </ul></li>
 <li>prox 연산은 각 penalty종류에 따라 다르게 정의
 <ul>
-<li>Group Lasso : column vector 전체를 soft-Thresholding</li>
+<li>Group Lasso : 단순 L1 정규화 column vector 전체를 soft-Thresholding</li>
 <li>Sparse Group Lasso : 먼저 개별 lag별 soft-threshold <span class="math inline">\(\to\)</span> 전체 vector에 soft-threshold</li>
 <li>Hierarchical Group Lasso : lag가 높은 그룹부터 차례대로 soft-threshold적용</li>
 </ul></li>
 </ul>
+<p><code>-</code> Soft-thresholding</p>
+<ul>
+<li>어떤 값 x에 대해 정규화 항을 적용한 후,</li>
+<li>절댓값이 작으면 0이 됨(가중치 제거)</li>
+<li>크면 그 크기만큼 줄어듦(패널티에 의한 수축)</li>
+</ul>
+<p><span class="math display">\[
+S_{\lambda}(x) =
+\begin{cases}
+x - \lambda &amp; \text{if } x &gt; \lambda \\\\
+0 &amp; \text{if } |x| \leq \lambda \\\\
+x + \lambda &amp; \text{if } x &lt; -\lambda
+\end{cases}
+\]</span></p>
 </section>
 <section id="optimizing-the-penalized-clstm-objective" class="level4">
 <h4 class="anchored" data-anchor-id="optimizing-the-penalized-clstm-objective">4.2 Optimizing the Penalized cLSTM Objective</h4>
-<p><code>-</code> 최적화 방법 : 마찬가지로 Proximal Gradient Descent</p>
+<p><code>-</code> 최적화 방법 : 마찬가지로 미분 불가능하기 때문에 Proximal Gradient Descent</p>
 <p><code>-</code> 구체적 학습 방법</p>
 <ul>
 <li>Backpropagation Through Time(BPTT)로 gradient 계산
@@ -657,11 +671,39 @@ window.Quarto = {
 </ul></li>
 </ul>
 </section>
-<section id="real-motion-capture-data" class="level4">
-<h4 class="anchored" data-anchor-id="real-motion-capture-data">6.2 Real Motion Capture Data</h4>
+</section>
+<section id="dream-challenge" class="level3">
+<h3 class="anchored" data-anchor-id="dream-challenge">7. DREAM challenge</h3>
+<p><code>-</code> 목표</p>
+<ul>
+<li>cMLP + 정규화 를 통해 유전자 발현 시계열 데이터로부터 유전자 간 조절 네트워크를 복원할 수 있는지 평가</li>
+</ul>
+<p><code>-</code> 데이터셋 : DREAM3 simulation</p>
+<ul>
+<li>비선형 동역학 + 은닉 변수 포함 <span class="math inline">\(\to\)</span> Granger추정 매우 어려움</li>
+<li>5개의 시뮬레이션 데이터셋 <span class="math inline">\(\to\)</span> 각각 다른 실제 Granger 인과 그래프 존재</li>
+<li>2개는 대장균 데이터..3개는 효모 데이터..</li>
+<li>각 세트는 p=100개의 유전자 + 21시점에서 각시계열 46번 독립적인 반복추정 : 총시점 -966</li>
+<li>유전자 사이의 실제 조절네트워크(정답)제공</li>
+</ul>
+<p><code>-</code> 실험 설정</p>
+<ul>
+<li>사용 모델 : cMLP</li>
+<li>lag : K = 5</li>
+<li>희소성 정규화 : Hierarchical Group Lasso</li>
+<li>평가 : AUROC</li>
+</ul>
+<p><code>-</code> 결과</p>
+<ul>
+<li>매우 복잡하고 비선형적인 데이터임에도 불구하고 중요한 인과 연결들을 거의 정확히 복원</li>
+<li>lag가 중요한 경우에도 hierarchical penalty가 자동으로 lag 선택</li>
+</ul>
+<p><img src="python_project/3-1/ML/ML2025/posts/chart.png" class="img-fluid"></p>
+<section id="dependencies-in-human-motion-capture" class="level4">
+<h4 class="anchored" data-anchor-id="dependencies-in-human-motion-capture">8. Dependencies in human motion capture</h4>
 <p><code>-</code> 목적</p>
 <ul>
-<li>실제 인간의 움직임 데이터를 이용해 Neural Granger Causality 모델들이 현실 데이터에서 잘 작동하는지 확인</li>
+<li>실제 인간의 움직임 데이터를 이용해 Neural Granger Causality 모델들이 신체 부위 간의 비선형적, 장기적 인과관계를 복원해보는 실험 <span class="math inline">\(\to\)</span> 현실 데이터에서 잘 작동하는지 확인</li>
 </ul>
 <p><code>-</code> 분석하고자 한 것</p>
 <ul>
@@ -671,29 +713,65 @@ window.Quarto = {
 <p><code>-</code> 데이터 : MoCap(Motion Capture)</p>
 <ul>
 <li>한 사람의 걷는 동작을 포착한 데이터</li>
-<li>15개의 관절의 위치 시계열로 구성됨</li>
-<li>각 관절 = 하나의 시계열 변수(15차원)</li>
-<li>전처리 : 0~1사이로 정규화</li>
-<li>1600시점 사용</li>
+<li>24개의 고유한 신체 부위</li>
+<li>여러 자유도로 측정하여 p=54개의 관절의 각도 및 신체 위치 시계열로 구성됨</li>
+<li>T = 2024개의 시점</li>
 </ul>
 <p><code>-</code> 실험 설정</p>
 <ul>
-<li>모델 : cMLP, cLSTM</li>
-<li>희소성 정규화 : Hierarchical Group Lasso(lag 자동 선택!)</li>
-<li>최대 lag : K=5</li>
-<li>학습데이터 길이 : 약 1600</li>
+<li>모델 : cLSTM</li>
+<li>은닉 유닛 수 : H</li>
+<li>희소성 정규화 : Hierarchical Group Lasso ?</li>
+<li>입력분할 : 전체 시계열 길이를 20짜리 조각으로 나누어 학습()</li>
 </ul>
 <p><code>-</code> 결과 분석</p>
 <ul>
-<li>cMLP
+<li><span class="math inline">\(\lambda\)</span>에 값에 따라 그래프를 그림</li>
+<li>saprsity가 강해질수록 연결이 줄어들고 핵심 인과구조만 남음</li>
+<li><span class="math inline">\(\lambda\)</span> 40까지 키웠을 때 남은 결과
 <ul>
-<li>Hierarchical group lasso를 통해 어떤 관절의 어떤 시간지연이 중요한지 해석 가능</li>
+<li>양쪽 무릎 간 상호작용(오른쪽 무릎 <span class="math inline">\(\to\)</span> 왼쪽 무릎, 왼쪽 무릎 <span class="math inline">\(\to\)</span> 오른쪽 무릎)</li>
+<li>팔 <span class="math inline">\(\to\)</span> 팔꿈치 <span class="math inline">\(\to\)</span> 손</li>
+<li>손 <span class="math inline">\(\leftrightarrow\)</span> 발 (ex: 발 끝이 닿는 동작 등에서 둘 사이의 인과)</li>
+<li>몸통 중심 <span class="math inline">\(\to\)</span> 사지 (몸의 움직임이 전체 팔다리로 전파)</li>
+</ul></li>
+<li>시계열 기반 비선형 구조 학습이 실제 사람 움직임 분석에도 효과적이다</li>
+</ul>
+</section>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">9. Conclusion</h3>
+<p><code>-</code> 전체 프레임 워크 요약</p>
+<ul>
+<li>출력변수마다 독립적인 신경망 구성 <span class="math inline">\(\to\)</span> 인과관계 해석 쉬워짐</li>
+<li>입력 가중치에 대한 희소성 정규화 적용 <span class="math inline">\(\to\)</span> Granger 인과구조 추론 가능</li>
+</ul>
+<p><code>-</code> 성능 요약</p>
+<ul>
+<li>DREAM3 챌린지
+<ul>
+<li>기존 Granger 추론 기법보다 높은 정확도</li>
+</ul></li>
+<li>사람 움직임 데이터
+<ul>
+<li>직관적으로 해석 가능한 신체 부위 간 의존성 구조를 복원</li>
+</ul></li>
+</ul>
+<p><code>-</code> 향후 연구 방향</p>
+<ul>
+<li>구조화된 정규화 탐색
+<ul>
+<li>hierarchical group lasso 를 최초로 신경망에 도입</li>
+<li>트리구조, 네트워크 구조의 penalty 적용해볼 수도</li>
+</ul></li>
+<li>더 강력한 모델로 확장가능
+<ul>
+<li>MLP,LSTM 처럼 기초구조만 사용했지만 다른 딥러닝 모델로 확장가능</li>
 </ul></li>
 </ul>
 <hr>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
