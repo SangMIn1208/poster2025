@@ -220,18 +220,18 @@ window.Quarto = {
 <li>간단하고 해석이 쉬움</li>
 <li>수학적으로 정립되어있고 검정도 가능</li>
 </ul>
-<p><code>-</code> 단점(<span class="math inline">\(\to\)</span> Neural Granger 등장배경)</p>
+<p><code>-</code> <strong>단점</strong>(<span class="math inline">\(\to\)</span> Neural Granger 등장배경)</p>
 <ul>
-<li>선형성 가정
+<li><strong>선형성 가정</strong>
 <ul>
 <li>현실 데이터는 대부분 비선형, 선형 구조만 모델링 가능</li>
 </ul></li>
-<li>고정된 lag 수 K 지정
+<li><strong>고정된 lag</strong> 수 K 지정
 <ul>
 <li>어떤 시계열은 짧은 lag, 어떤 시계열은 긴 lag에 반응할 수 있는데</li>
 <li>모두 동일한 K를 적용함</li>
 </ul></li>
-<li>고차원 문제에 취약
+<li><strong>고차원 문제에 취약</strong>
 <ul>
 <li>변수가 많아지만 VAR파라미터 수도 폭발적 증가</li>
 <li>과적합 위험</li>
@@ -239,7 +239,7 @@ window.Quarto = {
 </ul>
 <p><code>-</code> 희소성 유도 패널티</p>
 <ul>
-<li>모델의 가중치 중 일부를 정확히 0으로 만드는 정규화 기법</li>
+<li>모델의<strong>가중치 중 일부를 정확히 0</strong>으로 만드는 정규화 기법</li>
 <li>모델이 불필요한 입력을 자동으로 제거하도록 유도하는 제약</li>
 <li>모든 변수들이 서로 영향을 주지 않음, 대부분의 관계는 0인 것이 보통</li>
 </ul>

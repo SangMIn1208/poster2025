@@ -207,12 +207,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#X_np, beta, GC = simulate_var(p=10, T=1000, lag=3)</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#X = torch.tensor(X_np[np.newaxis], dtype=torch.float32, device=device)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="af95720f-c7bb-4f31-b904-99ef2185ffa4" class="cell" data-execution_count="5">
+<div id="af95720f-c7bb-4f31-b904-99ef2185ffa4" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>wt <span class="op">=</span> pd.read_csv(<span class="st">"weather2024.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="7283d4d5-7ff0-4207-8821-76cd90328480" class="cell" data-scrolled="true" data-execution_count="6">
+<div id="7283d4d5-7ff0-4207-8821-76cd90328480" class="cell" data-scrolled="true" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -335,44 +335,690 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="6c2ab75f-3d89-460c-81d0-6d4cec92cc25" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>X_np <span class="op">=</span> wt.iloc[:, <span class="dv">1</span>:].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2a28ce13-a9b6-40e5-a169-7258297fbd63" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>X_np <span class="op">=</span> wt.iloc[:, <span class="dv">1</span>:].values</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X_np)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>X_np <span class="op">=</span> X_scaled.astype(np.float32)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor(X_np[np.newaxis], dtype<span class="op">=</span>torch.float32, device<span class="op">=</span>device)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="c7317502-ac2f-4daf-97be-036f2acd474d" class="cell" data-execution_count="9">
+<div id="c7317502-ac2f-4daf-97be-036f2acd474d" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor(X_np[np.newaxis], dtype<span class="op">=</span>torch.float32, device<span class="op">=</span>device)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="a6ac620c-a3b7-4e8e-afb2-d814c9182c0c" class="cell" data-execution_count="11">
+<div id="a6ac620c-a3b7-4e8e-afb2-d814c9182c0c" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up model</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>cmlp <span class="op">=</span> cMLP(X.shape[<span class="op">-</span><span class="dv">1</span>], lag<span class="op">=</span><span class="dv">5</span>, hidden<span class="op">=</span>[<span class="dv">100</span>]).cuda(device<span class="op">=</span>device)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1d1b498a-11c0-45fa-a6fc-f639dd50c376" class="cell" data-execution_count="12">
+<div id="1d1b498a-11c0-45fa-a6fc-f639dd50c376" class="cell" data-scrolled="true" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train with ISTA</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>train_loss_list <span class="op">=</span> train_model_ista(</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    cmlp, X, lam<span class="op">=</span><span class="fl">0.002</span>, lam_ridge<span class="op">=</span><span class="fl">1e-2</span>, lr<span class="op">=</span><span class="fl">5e-2</span>, penalty<span class="op">=</span><span class="st">'H'</span>, max_iter<span class="op">=</span><span class="dv">50000</span>,</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    check_every<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>----------Iter = 100----------
-Loss = nan
-Variable usage = 80.00%</code></pre>
+Loss = 0.379958
+Variable usage = 100.00%
+----------Iter = 200----------
+Loss = 0.366504
+Variable usage = 100.00%
+----------Iter = 300----------
+Loss = 0.357959
+Variable usage = 100.00%
+----------Iter = 400----------
+Loss = 0.351531
+Variable usage = 100.00%
+----------Iter = 500----------
+Loss = 0.346289
+Variable usage = 100.00%
+----------Iter = 600----------
+Loss = 0.341924
+Variable usage = 100.00%
+----------Iter = 700----------
+Loss = 0.338129
+Variable usage = 100.00%
+----------Iter = 800----------
+Loss = 0.334756
+Variable usage = 100.00%
+----------Iter = 900----------
+Loss = 0.331626
+Variable usage = 100.00%
+----------Iter = 1000----------
+Loss = 0.328709
+Variable usage = 100.00%
+----------Iter = 1100----------
+Loss = 0.325968
+Variable usage = 100.00%
+----------Iter = 1200----------
+Loss = 0.323389
+Variable usage = 100.00%
+----------Iter = 1300----------
+Loss = 0.320968
+Variable usage = 100.00%
+----------Iter = 1400----------
+Loss = 0.318670
+Variable usage = 100.00%
+----------Iter = 1500----------
+Loss = 0.316470
+Variable usage = 100.00%
+----------Iter = 1600----------
+Loss = 0.314376
+Variable usage = 100.00%
+----------Iter = 1700----------
+Loss = 0.312334
+Variable usage = 100.00%
+----------Iter = 1800----------
+Loss = 0.310358
+Variable usage = 100.00%
+----------Iter = 1900----------
+Loss = 0.308462
+Variable usage = 100.00%
+----------Iter = 2000----------
+Loss = 0.306619
+Variable usage = 100.00%
+----------Iter = 2100----------
+Loss = 0.304820
+Variable usage = 100.00%
+----------Iter = 2200----------
+Loss = 0.303053
+Variable usage = 100.00%
+----------Iter = 2300----------
+Loss = 0.301335
+Variable usage = 100.00%
+----------Iter = 2400----------
+Loss = 0.299677
+Variable usage = 100.00%
+----------Iter = 2500----------
+Loss = 0.298070
+Variable usage = 100.00%
+----------Iter = 2600----------
+Loss = 0.296501
+Variable usage = 100.00%
+----------Iter = 2700----------
+Loss = 0.294969
+Variable usage = 100.00%
+----------Iter = 2800----------
+Loss = 0.293476
+Variable usage = 100.00%
+----------Iter = 2900----------
+Loss = 0.292024
+Variable usage = 100.00%
+----------Iter = 3000----------
+Loss = 0.290616
+Variable usage = 100.00%
+----------Iter = 3100----------
+Loss = 0.289244
+Variable usage = 100.00%
+----------Iter = 3200----------
+Loss = 0.287913
+Variable usage = 100.00%
+----------Iter = 3300----------
+Loss = 0.286624
+Variable usage = 100.00%
+----------Iter = 3400----------
+Loss = 0.285378
+Variable usage = 100.00%
+----------Iter = 3500----------
+Loss = 0.284173
+Variable usage = 100.00%
+----------Iter = 3600----------
+Loss = 0.282993
+Variable usage = 100.00%
+----------Iter = 3700----------
+Loss = 0.281854
+Variable usage = 100.00%
+----------Iter = 3800----------
+Loss = 0.280750
+Variable usage = 100.00%
+----------Iter = 3900----------
+Loss = 0.279678
+Variable usage = 100.00%
+----------Iter = 4000----------
+Loss = 0.278645
+Variable usage = 100.00%
+----------Iter = 4100----------
+Loss = 0.277644
+Variable usage = 100.00%
+----------Iter = 4200----------
+Loss = 0.276675
+Variable usage = 100.00%
+----------Iter = 4300----------
+Loss = 0.275716
+Variable usage = 100.00%
+----------Iter = 4400----------
+Loss = 0.274802
+Variable usage = 100.00%
+----------Iter = 4500----------
+Loss = 0.273929
+Variable usage = 100.00%
+----------Iter = 4600----------
+Loss = 0.273084
+Variable usage = 100.00%
+----------Iter = 4700----------
+Loss = 0.272277
+Variable usage = 100.00%
+----------Iter = 4800----------
+Loss = 0.271502
+Variable usage = 100.00%
+----------Iter = 4900----------
+Loss = 0.270757
+Variable usage = 100.00%
+----------Iter = 5000----------
+Loss = 0.270052
+Variable usage = 100.00%
+----------Iter = 5100----------
+Loss = 0.269368
+Variable usage = 100.00%
+----------Iter = 5200----------
+Loss = 0.268712
+Variable usage = 100.00%
+----------Iter = 5300----------
+Loss = 0.268086
+Variable usage = 100.00%
+----------Iter = 5400----------
+Loss = 0.267494
+Variable usage = 100.00%
+----------Iter = 5500----------
+Loss = 0.266921
+Variable usage = 100.00%
+----------Iter = 5600----------
+Loss = 0.266371
+Variable usage = 100.00%
+----------Iter = 5700----------
+Loss = 0.265842
+Variable usage = 100.00%
+----------Iter = 5800----------
+Loss = 0.265335
+Variable usage = 100.00%
+----------Iter = 5900----------
+Loss = 0.264853
+Variable usage = 100.00%
+----------Iter = 6000----------
+Loss = 0.264386
+Variable usage = 100.00%
+----------Iter = 6100----------
+Loss = 0.263937
+Variable usage = 100.00%
+----------Iter = 6200----------
+Loss = 0.263507
+Variable usage = 100.00%
+----------Iter = 6300----------
+Loss = 0.263096
+Variable usage = 100.00%
+----------Iter = 6400----------
+Loss = 0.262691
+Variable usage = 100.00%
+----------Iter = 6500----------
+Loss = 0.262301
+Variable usage = 100.00%
+----------Iter = 6600----------
+Loss = 0.261925
+Variable usage = 100.00%
+----------Iter = 6700----------
+Loss = 0.261558
+Variable usage = 100.00%
+----------Iter = 6800----------
+Loss = 0.261206
+Variable usage = 100.00%
+----------Iter = 6900----------
+Loss = 0.260862
+Variable usage = 100.00%
+----------Iter = 7000----------
+Loss = 0.260534
+Variable usage = 100.00%
+----------Iter = 7100----------
+Loss = 0.260217
+Variable usage = 100.00%
+----------Iter = 7200----------
+Loss = 0.259909
+Variable usage = 100.00%
+----------Iter = 7300----------
+Loss = 0.259618
+Variable usage = 100.00%
+----------Iter = 7400----------
+Loss = 0.259329
+Variable usage = 100.00%
+----------Iter = 7500----------
+Loss = 0.259053
+Variable usage = 100.00%
+----------Iter = 7600----------
+Loss = 0.258782
+Variable usage = 100.00%
+----------Iter = 7700----------
+Loss = 0.258515
+Variable usage = 100.00%
+----------Iter = 7800----------
+Loss = 0.258254
+Variable usage = 100.00%
+----------Iter = 7900----------
+Loss = 0.258009
+Variable usage = 100.00%
+----------Iter = 8000----------
+Loss = 0.257770
+Variable usage = 100.00%
+----------Iter = 8100----------
+Loss = 0.257540
+Variable usage = 100.00%
+----------Iter = 8200----------
+Loss = 0.257317
+Variable usage = 100.00%
+----------Iter = 8300----------
+Loss = 0.257095
+Variable usage = 100.00%
+----------Iter = 8400----------
+Loss = 0.256880
+Variable usage = 100.00%
+----------Iter = 8500----------
+Loss = 0.256674
+Variable usage = 100.00%
+----------Iter = 8600----------
+Loss = 0.256462
+Variable usage = 100.00%
+----------Iter = 8700----------
+Loss = 0.256259
+Variable usage = 100.00%
+----------Iter = 8800----------
+Loss = 0.256053
+Variable usage = 100.00%
+----------Iter = 8900----------
+Loss = 0.255860
+Variable usage = 100.00%
+----------Iter = 9000----------
+Loss = 0.255664
+Variable usage = 100.00%
+----------Iter = 9100----------
+Loss = 0.255475
+Variable usage = 100.00%
+----------Iter = 9200----------
+Loss = 0.255306
+Variable usage = 100.00%
+----------Iter = 9300----------
+Loss = 0.255131
+Variable usage = 100.00%
+----------Iter = 9400----------
+Loss = 0.254968
+Variable usage = 100.00%
+----------Iter = 9500----------
+Loss = 0.254805
+Variable usage = 100.00%
+----------Iter = 9600----------
+Loss = 0.254650
+Variable usage = 100.00%
+----------Iter = 9700----------
+Loss = 0.254500
+Variable usage = 100.00%
+----------Iter = 9800----------
+Loss = 0.254353
+Variable usage = 100.00%
+----------Iter = 9900----------
+Loss = 0.254206
+Variable usage = 100.00%
+----------Iter = 10000----------
+Loss = 0.254064
+Variable usage = 100.00%
+----------Iter = 10100----------
+Loss = 0.253922
+Variable usage = 100.00%
+----------Iter = 10200----------
+Loss = 0.253786
+Variable usage = 100.00%
+----------Iter = 10300----------
+Loss = 0.253656
+Variable usage = 100.00%
+----------Iter = 10400----------
+Loss = 0.253515
+Variable usage = 100.00%
+----------Iter = 10500----------
+Loss = 0.253387
+Variable usage = 100.00%
+----------Iter = 10600----------
+Loss = 0.253266
+Variable usage = 100.00%
+----------Iter = 10700----------
+Loss = 0.253135
+Variable usage = 100.00%
+----------Iter = 10800----------
+Loss = 0.253016
+Variable usage = 100.00%
+----------Iter = 10900----------
+Loss = 0.252899
+Variable usage = 100.00%
+----------Iter = 11000----------
+Loss = 0.252779
+Variable usage = 100.00%
+----------Iter = 11100----------
+Loss = 0.252669
+Variable usage = 100.00%
+----------Iter = 11200----------
+Loss = 0.252551
+Variable usage = 100.00%
+----------Iter = 11300----------
+Loss = 0.252438
+Variable usage = 100.00%
+----------Iter = 11400----------
+Loss = 0.252332
+Variable usage = 100.00%
+----------Iter = 11500----------
+Loss = 0.252228
+Variable usage = 100.00%
+----------Iter = 11600----------
+Loss = 0.252122
+Variable usage = 100.00%
+----------Iter = 11700----------
+Loss = 0.252016
+Variable usage = 100.00%
+----------Iter = 11800----------
+Loss = 0.251921
+Variable usage = 100.00%
+----------Iter = 11900----------
+Loss = 0.251814
+Variable usage = 100.00%
+----------Iter = 12000----------
+Loss = 0.251719
+Variable usage = 100.00%
+----------Iter = 12100----------
+Loss = 0.251626
+Variable usage = 100.00%
+----------Iter = 12200----------
+Loss = 0.251529
+Variable usage = 100.00%
+----------Iter = 12300----------
+Loss = 0.251438
+Variable usage = 100.00%
+----------Iter = 12400----------
+Loss = 0.251341
+Variable usage = 100.00%
+----------Iter = 12500----------
+Loss = 0.251262
+Variable usage = 100.00%
+----------Iter = 12600----------
+Loss = 0.251164
+Variable usage = 100.00%
+----------Iter = 12700----------
+Loss = 0.251074
+Variable usage = 100.00%
+----------Iter = 12800----------
+Loss = 0.250992
+Variable usage = 100.00%
+----------Iter = 12900----------
+Loss = 0.250908
+Variable usage = 100.00%
+----------Iter = 13000----------
+Loss = 0.250820
+Variable usage = 100.00%
+----------Iter = 13100----------
+Loss = 0.250733
+Variable usage = 100.00%
+----------Iter = 13200----------
+Loss = 0.250655
+Variable usage = 100.00%
+----------Iter = 13300----------
+Loss = 0.250579
+Variable usage = 100.00%
+----------Iter = 13400----------
+Loss = 0.250491
+Variable usage = 100.00%
+----------Iter = 13500----------
+Loss = 0.250420
+Variable usage = 100.00%
+----------Iter = 13600----------
+Loss = 0.250328
+Variable usage = 100.00%
+----------Iter = 13700----------
+Loss = 0.250268
+Variable usage = 100.00%
+----------Iter = 13800----------
+Loss = 0.250190
+Variable usage = 100.00%
+----------Iter = 13900----------
+Loss = 0.250108
+Variable usage = 100.00%
+----------Iter = 14000----------
+Loss = 0.250039
+Variable usage = 100.00%
+----------Iter = 14100----------
+Loss = 0.249963
+Variable usage = 100.00%
+----------Iter = 14200----------
+Loss = 0.249891
+Variable usage = 100.00%
+----------Iter = 14300----------
+Loss = 0.249828
+Variable usage = 100.00%
+----------Iter = 14400----------
+Loss = 0.249764
+Variable usage = 100.00%
+----------Iter = 14500----------
+Loss = 0.249700
+Variable usage = 100.00%
+----------Iter = 14600----------
+Loss = 0.249631
+Variable usage = 100.00%
+----------Iter = 14700----------
+Loss = 0.249570
+Variable usage = 100.00%
+----------Iter = 14800----------
+Loss = 0.249516
+Variable usage = 100.00%
+----------Iter = 14900----------
+Loss = 0.249455
+Variable usage = 100.00%
+----------Iter = 15000----------
+Loss = 0.249397
+Variable usage = 100.00%
+----------Iter = 15100----------
+Loss = 0.249346
+Variable usage = 100.00%
+----------Iter = 15200----------
+Loss = 0.249282
+Variable usage = 100.00%
+----------Iter = 15300----------
+Loss = 0.249226
+Variable usage = 100.00%
+----------Iter = 15400----------
+Loss = 0.249174
+Variable usage = 100.00%
+----------Iter = 15500----------
+Loss = 0.249128
+Variable usage = 100.00%
+----------Iter = 15600----------
+Loss = 0.249078
+Variable usage = 100.00%
+----------Iter = 15700----------
+Loss = 0.249025
+Variable usage = 100.00%
+----------Iter = 15800----------
+Loss = 0.248975
+Variable usage = 100.00%
+----------Iter = 15900----------
+Loss = 0.248933
+Variable usage = 100.00%
+----------Iter = 16000----------
+Loss = 0.248872
+Variable usage = 100.00%
+----------Iter = 16100----------
+Loss = 0.248828
+Variable usage = 100.00%
+----------Iter = 16200----------
+Loss = 0.248800
+Variable usage = 100.00%
+----------Iter = 16300----------
+Loss = 0.248757
+Variable usage = 100.00%
+----------Iter = 16400----------
+Loss = 0.248709
+Variable usage = 100.00%
+----------Iter = 16500----------
+Loss = 0.248643
+Variable usage = 100.00%
+----------Iter = 16600----------
+Loss = 0.248617
+Variable usage = 100.00%
+----------Iter = 16700----------
+Loss = 0.248577
+Variable usage = 100.00%
+----------Iter = 16800----------
+Loss = 0.248544
+Variable usage = 100.00%
+----------Iter = 16900----------
+Loss = 0.248504
+Variable usage = 100.00%
+----------Iter = 17000----------
+Loss = 0.248460
+Variable usage = 100.00%
+----------Iter = 17100----------
+Loss = 0.248419
+Variable usage = 100.00%
+----------Iter = 17200----------
+Loss = 0.248357
+Variable usage = 100.00%
+----------Iter = 17300----------
+Loss = 0.248330
+Variable usage = 100.00%
+----------Iter = 17400----------
+Loss = 0.248306
+Variable usage = 100.00%
+----------Iter = 17500----------
+Loss = 0.248273
+Variable usage = 100.00%
+----------Iter = 17600----------
+Loss = 0.248247
+Variable usage = 100.00%
+----------Iter = 17700----------
+Loss = 0.248212
+Variable usage = 100.00%
+----------Iter = 17800----------
+Loss = 0.248180
+Variable usage = 100.00%
+----------Iter = 17900----------
+Loss = 0.248152
+Variable usage = 100.00%
+----------Iter = 18000----------
+Loss = 0.248091
+Variable usage = 100.00%
+----------Iter = 18100----------
+Loss = 0.248080
+Variable usage = 100.00%
+----------Iter = 18200----------
+Loss = 0.248074
+Variable usage = 100.00%
+----------Iter = 18300----------
+Loss = 0.248029
+Variable usage = 100.00%
+----------Iter = 18400----------
+Loss = 0.247971
+Variable usage = 100.00%
+----------Iter = 18500----------
+Loss = 0.247962
+Variable usage = 100.00%
+----------Iter = 18600----------
+Loss = 0.247935
+Variable usage = 100.00%
+----------Iter = 18700----------
+Loss = 0.247866
+Variable usage = 100.00%
+----------Iter = 18800----------
+Loss = 0.247889
+Variable usage = 100.00%
+----------Iter = 18900----------
+Loss = 0.247866
+Variable usage = 100.00%
+----------Iter = 19000----------
+Loss = 0.247844
+Variable usage = 100.00%
+----------Iter = 19100----------
+Loss = 0.247832
+Variable usage = 100.00%
+----------Iter = 19200----------
+Loss = 0.247849
+Variable usage = 100.00%
+----------Iter = 19300----------
+Loss = 0.247865
+Variable usage = 100.00%
+----------Iter = 19400----------
+Loss = 0.247840
+Variable usage = 100.00%
+----------Iter = 19500----------
+Loss = 0.247837
+Variable usage = 100.00%
+----------Iter = 19600----------
+Loss = 0.247862
+Variable usage = 100.00%
+Stopping early</code></pre>
 </div>
-<div class="cell-output cell-output-error">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[12], line 2</span>
-<span class="ansi-green-fg ansi-bold">      1</span> <span style="font-style:italic;color:rgb(95,135,135)"># Train with ISTA</span>
-<span class="ansi-green-fg">----&gt; 2</span> train_loss_list <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">train_model_ista</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-fg ansi-bold">      3</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">cmlp</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">X</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">lam</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">0.002</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">lam_ridge</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">1e-2</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">lr</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">5e-2</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">penalty</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">'</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">H</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">'</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">max_iter</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">50000</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-fg ansi-bold">      4</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">check_every</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">100</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/python_project/3-1/poster/Neural-GC/models/cmlp.py:507</span>, in <span class="ansi-cyan-fg">train_model_ista</span><span class="ansi-blue-fg">(cmlp, X, lr, max_iter, lam, lam_ridge, penalty, lookback, check_every, verbose)</span>
-<span class="ansi-green-fg ansi-bold">    505</span>     best_it <span style="color:rgb(98,98,98)">=</span> it
-<span class="ansi-green-fg ansi-bold">    506</span>     best_model <span style="color:rgb(98,98,98)">=</span> deepcopy(cmlp)
-<span class="ansi-green-fg">--&gt; 507</span> <span style="font-weight:bold;color:rgb(0,135,0)">elif</span> (<span class="ansi-yellow-bg">it</span><span class="ansi-yellow-bg"> </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">-</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">best_it</span>) <span style="color:rgb(98,98,98)">==</span> lookback <span style="color:rgb(98,98,98)">*</span> check_every:
-<span class="ansi-green-fg ansi-bold">    508</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> verbose:
-<span class="ansi-green-fg ansi-bold">    509</span>         <span style="color:rgb(0,135,0)">print</span>(<span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">Stopping early</span><span style="color:rgb(175,0,0)">'</span>)
-
-<span class="ansi-red-fg">TypeError</span>: unsupported operand type(s) for -: 'int' and 'NoneType'</pre>
+</div>
+<div id="4c8c2f4a-4f74-4421-aa19-991ea49cf208" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>train_loss_np <span class="op">=</span> np.array([loss.cpu().item() <span class="cf">for</span> loss <span class="kw">in</span> train_loss_list])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="f1b3cee6-d64c-49a8-b779-cc1c83b1997d" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loss function plot</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="dv">50</span> <span class="op">*</span> np.arange(<span class="bu">len</span>(train_loss_np)), train_loss_np)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'cLSTM training'</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Loss'</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Training steps'</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="6.cMLP_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="0a206ecd-695a-400e-aa43-bcb2b8aae786" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5개의 기상 변수 (기온, 강수량, 풍속, 습도, 일사)에 대한 GC 행렬</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>GC <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>],  <span class="co"># 기온 -&gt; 강수량</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>               [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>],  <span class="co"># 강수량 -&gt; 풍속</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>               [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>],  <span class="co"># 풍속 -&gt; 습도</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>               [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>],  <span class="co"># 습도 -&gt; 일사</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>               [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>]])  <span class="co"># 일사 -&gt; 기온 (self loop)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c4ff151e-757e-4f85-a2e5-b18387d90126" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check learned Granger causality</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>GC_est <span class="op">=</span> cmlp.GC().cpu().data.numpy()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'True variable usage = </span><span class="sc">%.2f%%</span><span class="st">'</span> <span class="op">%</span> (<span class="dv">100</span> <span class="op">*</span> np.mean(GC)))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Estimated variable usage = </span><span class="sc">%.2f%%</span><span class="st">'</span> <span class="op">%</span> (<span class="dv">100</span> <span class="op">*</span> np.mean(GC_est)))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Accuracy = </span><span class="sc">%.2f%%</span><span class="st">'</span> <span class="op">%</span> (<span class="dv">100</span> <span class="op">*</span> np.mean(GC <span class="op">==</span> GC_est)))</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Make figures</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>fig, axarr <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">0</span>].imshow(GC, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">0</span>].set_title(<span class="st">'GC actual'</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">0</span>].set_ylabel(<span class="st">'Affected series'</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">0</span>].set_xlabel(<span class="st">'Causal series'</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">0</span>].set_xticks([])</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">0</span>].set_yticks([])</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">1</span>].imshow(GC_est, cmap<span class="op">=</span><span class="st">'Blues'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>, extent<span class="op">=</span>(<span class="dv">0</span>, <span class="bu">len</span>(GC_est), <span class="bu">len</span>(GC_est), <span class="dv">0</span>))</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">1</span>].set_ylabel(<span class="st">'Affected series'</span>)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">1</span>].set_xlabel(<span class="st">'Causal series'</span>)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">1</span>].set_xticks([])</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>axarr[<span class="dv">1</span>].set_yticks([])</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Mark disagreements</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(GC_est)):</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(GC_est)):</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> GC[i, j] <span class="op">!=</span> GC_est[i, j]:</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>            rect <span class="op">=</span> plt.Rectangle((j, i<span class="op">-</span><span class="fl">0.05</span>), <span class="dv">1</span>, <span class="dv">1</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'red'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>            axarr[<span class="dv">1</span>].add_patch(rect)</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>True variable usage = 36.00%
+Estimated variable usage = 100.00%
+Accuracy = 36.00%</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="6.cMLP_files/figure-html/cell-15-output-2.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
 </div>
