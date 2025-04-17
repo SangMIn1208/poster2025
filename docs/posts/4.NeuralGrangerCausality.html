@@ -252,9 +252,9 @@ window.Quarto = {
 <li><span class="math inline">\(min_{A(1),...,A(K)}\sum_{t=K}^{T}||x_t-\sum_{k=1}^{K}A^{(k)}x_{t-k}||^2_2+\lambda\sum_{ij}||(A^{(1)}_{ij},...,A^{K}_{ij}||_2,\)</span></li>
 <li>첫 항 : 예측오차 최소화</li>
 <li>둘째 항 : 정규화 항 = 희소성 유도 패널티</li>
-<li>그룹라쏘는 각 시계열 쌍(i,j)에 대해 모든 시간지연 k에 해당하는 계수들을 하나의 그룹으로 보고 동시에 0으로 수축시킴</li>
-<li>입력변수 j의 모든 lag가 출력변수 i에 영향을 주지 않으면 모두 0이 됨 <span class="math inline">\(\to\)</span> Granger 인과성 없음</li>
-<li><span class="math inline">\(\lambda\)</span> : 패널티 강도(크면 더 많은 항이 0)</li>
+<li><strong>그룹라쏘는 각 시계열 쌍(i,j)에 대해 모든 시간지연 k에 해당하는 계수들을 하나의 그룹으로 보고 동시에 0으로 수축</strong>시킴</li>
+<li><strong>입력변수 j의 모든 lag가 출력변수 i에 영향을 주지 않으면 모두 0</strong>이 됨 <span class="math inline">\(\to\)</span> Granger 인과성 없음</li>
+<li><strong><span class="math inline">\(\lambda\)</span></strong> : <strong>패널티 강도(크면 더 많은 항이 0)</strong></li>
 </ul></li>
 <li>Hierarhical Group Lasso 패널티 : 단순히 인과관계 유무만 판단하는 것이 아니라 인과관계 lag도 자동으로 선택해줌</li>
 </ul></li>
@@ -275,38 +275,38 @@ window.Quarto = {
 </ul>
 <p><code>-</code> Problem</p>
 <ul>
-<li>블랙박스 문제 : MLP/LSTM은 강력한 예측성능을 가지지만 전체 시계열을 한번에 모델링(출력 <span class="math inline">\(x_t\)</span>를 하나의 신경망으로 학습) <span class="math inline">\(\to\)</span> 특정 입력 <span class="math inline">\(x_j\)</span>가 특정 출력 <span class="math inline">\(x_i\)</span>에 어떤 영향을 주는지 분리 어려움(숨겨진 층들을 공유하기 때문)</li>
-<li>모든 출력이 같은 <strong>시간지연(lag)</strong> 에 의존한다고 가정 : 전통적인 VAR모델에서는 최대 시차 k를 설정, 일반적 NAR 딥러닝 모델에서는 입력으로 같은 시간지연만 넣음
+<li><strong>블랙박스 문제</strong> : <strong>MLP/LSTM은 강력한 예측성능을 가지지만 전체 시계열을 한번에 모델링</strong>(출력 <span class="math inline">\(x_t\)</span>를 하나의 신경망으로 학습) <span class="math inline">\(\to\)</span> <strong>특정 입력 <span class="math inline">\(x_j\)</span>가 특정 출력 <span class="math inline">\(x_i\)</span>에 어떤 영향을 주는지 분리 어려움</strong></li>
+<li><strong>모든 출력이 같은 시간지연(lag) 에 의존한다고 가정</strong> : 전통적인 VAR모델에서는 최대 시차 k를 설정, 일반적 NAR 딥러닝 모델에서는 <strong>입력으로 같은 시간지연만 넣음</strong>
 <ul>
 <li>모든 시계열이 지난 3시점만 (t-1, t-2, t-3)</li>
-<li>하지만 어떤 변수는 짧은 lag, 어떤 변수는 긴 lag에 의존할 수 있음</li>
-<li><span class="math inline">\(\to\)</span> 현실적인 구조 반영 못함</li>
+<li>하지만 <strong>어떤 변수는 짧은 lag, 어떤 변수는 긴 lag에 의존할 수 있음</strong></li>
+<li><span class="math inline">\(\to\)</span> <strong>현실적인 구조 반영 못함</strong></li>
 </ul></li>
 </ul>
 <p><code>-</code> 해결방법</p>
 <ul>
 <li>cMLP,cLSTM : Component-wise Neural Network</li>
-<li>각 출력 변수 <span class="math inline">\(x_{ti}\)</span>마다 독립적인 신경망 모델 <span class="math inline">\(g_i\)</span>를 사용하여 입력변수와의 관계를 학습
+<li><strong>각 출력 변수 <span class="math inline">\(x_{ti}\)</span>마다 독립적인 신경망 모델 <span class="math inline">\(g_i\)</span>를 사용</strong>하여 입력변수와의 관계를 학습
 <ul>
 <li>출력을 하나하나 분리해서 학습</li>
-<li>이러한 구조를 component-wise architecture(그래서 모델 이름 cMLP,cLSTM)</li>
+<li>이러한 구조를 <strong>component-wise architecture(그래서 모델 이름 cMLP,cLSTM)</strong></li>
 </ul></li>
-<li>장점 : 어떤 입력 시계열이 출력에 영향을 주는지 쉽게 해석 가능, 각 <span class="math inline">\(g_i\)</span>함수에만 집중하면 되기 때문에 인과 추론이 쉬워짐</li>
+<li>장점 : <strong>어떤 입력 시계열이 출력에 영향을 주는지 쉽게 해석 가능</strong>, 각 <span class="math inline">\(g_i\)</span>함수에만 집중하면 되기 때문에 <strong>인과 추론이 쉬워짐</strong></li>
 </ul>
 <p><code>-</code> Granger Non-Causality</p>
 <ul>
 <li>시계열 j가 시계열 i의 Granger 원인이 아니다 <span class="math inline">\(\leftrightarrow\)</span> <span class="math inline">\(g_i\)</span> 함수가 <span class="math inline">\(x_j\)</span>의 과거에 전혀 의존하지 않음</li>
 <li><span class="math inline">\(g_i(x_{t1},...,x_{tj},...x_{tp}) = g_i(x_{&lt;ti},...,x^{'}_{&lt;tj},...,x_{tp})\)</span></li>
 <li>여기서 <span class="math inline">\(x_{&lt;tj} \neq x^{'}_{&lt;tj}\)</span>임에도 결과는 같음</li>
-<li>즉, <span class="math inline">\(x_j\)</span>의 과거가 바뀌어도 <span class="math inline">\(x_{ti}\)</span> 예측에 아무 영향이 없음</li>
+<li>즉, <strong><span class="math inline">\(x_j\)</span>의 과거가 바뀌어도 <span class="math inline">\(x_{ti}\)</span> 예측에 아무 영향이 없음</strong></li>
 </ul>
 </section>
 <section id="sparse-input-mspscmlp" class="level4">
-<h4 class="anchored" data-anchor-id="sparse-input-mspscmlp">3.2 Sparse Input MSPs(cMLP)</h4>
+<h4 class="anchored" data-anchor-id="sparse-input-mspscmlp">3.2 Sparse Input MSPs(<strong>cMLP</strong>)</h4>
 <p><code>-</code> 구조</p>
 <ul>
-<li>각 출력 시계열 <span class="math inline">\(x_i\)</span> 에 대해 별도의 MLP <span class="math inline">\(g_i\)</span> 학습</li>
-<li><strong>희소성(sparsity)</strong> 을 유도해서 관련 없는 입력은 가중치를 0으로</li>
+<li><strong>각 출력 시계열 <span class="math inline">\(x_i\)</span> 에 대해 별도의 MLP <span class="math inline">\(g_i\)</span> 학습</strong></li>
+<li><strong>희소성(sparsity)</strong> 을 유도해서 <strong>관련 없는 입력은 가중치를 0</strong>으로</li>
 <li>각 출력변수 <span class="math inline">\(x_{ti}\)</span>는 다음과 같이 예측
 <ul>
 <li><span class="math inline">\(x_{ti}\)</span> = <span class="math inline">\(g_i(x_{&lt;t})+\epsilon_{ti}\)</span></li>
@@ -315,33 +315,33 @@ window.Quarto = {
 <li>출력 : 하나의 시계열 값 <span class="math inline">\(x_ti\)</span></li>
 </ul></li>
 <li>L개의 층(은닉층 L-1개, 출력층 1개)</li>
-<li>첫 번째 은닉층의 가중치가 가장 중요함 <span class="math inline">\(\to\)</span> 여기에 인과 구조가 반영</li>
-<li>첫 층의 가중치 <span class="math inline">\(W_1\)</span>은 시간 지연별로 나눔
+<li><strong>첫 번째 은닉층의 가중치가 가장 중요</strong>함 <span class="math inline">\(\to\)</span> 여기에 인과 구조가 반영</li>
+<li>첫 층의 가중치 <strong><span class="math inline">\(W_1\)</span>은 시간 지연별로 나눔</strong>
 <ul>
 <li><span class="math inline">\(W^1={W^{1,1}, W^{1,2}, ..., W^{1,K}}\)</span></li>
-<li>지연 k별 가중치 <span class="math inline">\(W^{1,k}\)</span> <span class="math inline">\(\to\)</span> lag별 효과 분석 가능</li>
+<li><strong>지연 k별 가중치</strong> <span class="math inline">\(W^{1,k}\)</span> <span class="math inline">\(\to\)</span> <strong>lag별 효과 분석 가능</strong></li>
 </ul></li>
 </ul>
 <p><code>-</code> Granger causality 판별 기준</p>
 <ul>
-<li>입력 <span class="math inline">\(x_j\)</span>의 과거값들이 출력 <span class="math inline">\(x_i\)</span>에 영향을 주지 않는다면, 첫 층의 해당 입력에 연결된 모든 가중치가 0이어야함
+<li>입력 <strong><span class="math inline">\(x_j\)</span>의 과거값들이 출력 <span class="math inline">\(x_i\)</span>에 영향을 주지 않는다면</strong>, <strong>첫 층의 해당 입력에 연결된 모든 가중치가 0</strong>이어야함
 <ul>
 <li><span class="math inline">\(W^1_{:,j}=0\)</span> for all lags <span class="math inline">\(\to\)</span> 시계열 j는 i의 Granger 원인이 아님</li>
-<li>그래서 가중치 0으로 만드는 <code>penalty</code> 도입!</li>
+<li>그래서 <strong>가중치 0으로 만드는</strong> <code>penalty</code> 도입!</li>
 </ul></li>
-<li>Group Lasso : 입력 시계열 j의 모든 지연에 대한 가중치를 하나의 그룹으로 보고, 그룹 전체를 0으로 만듦 <span class="math inline">\(\to\)</span> 시계열 j 전체를 삭제할지 말지 결정</li>
-<li>Sparse Group Lasso
+<li><strong>Group Lasso</strong> : 입력 <strong>시계열 j의 모든 지연에 대한 가중치를 하나의 그룹</strong>으로 보고, 그룹 <strong>전체를 0</strong>으로 만듦 <span class="math inline">\(\to\)</span> <strong>시계열 j 전체를 삭제할지 말지</strong> 결정</li>
+<li><strong>Sparse Group Lasso</strong>
 <ul>
-<li>더 유연하고 미세한 제어 가능</li>
-<li>일부 시계열은 완전 제거, 일부는 특정 lag만 유지</li>
+<li><strong>더 유연</strong>하고 미세한 제어 가능</li>
+<li><strong>일부 시계열은 완전 제거</strong>, <strong>일부는 특정 lag만 유지</strong></li>
 <li><span class="math inline">\(\alpha\)</span> : 전체 sparsity vs lag 선택간의 조절 파라미터</li>
 </ul></li>
-<li>Hierarchical Group Lasso
+<li><strong>Hierarchical Group Lasso</strong>
 <ul>
-<li>특정 lag 이상은 모두 제거되도록 하는 penalty</li>
+<li><strong>특정 lag 이상은 모두 제거</strong>되도록 하는 penalty</li>
 <li>lag 선택이 자연스럽게 이루어짐, 가중치 0인 관련없는 lag 자동으로 제거</li>
-<li>만약 lag 3의 가중치를 없애려면 lag 4,5…도 자동으로 없어져야함</li>
-<li><span class="math inline">\(\to\)</span> lag를 크게 설정해도 됨</li>
+<li>만약 <strong>lag 3의 가중치를 없애려면 lag 4,5…도 자동으로 없어져야함</strong></li>
+<li><span class="math inline">\(\to\)</span> <strong>lag를 크게 설정해도 됨</strong></li>
 </ul></li>
 </ul>
 </section>
@@ -350,38 +350,38 @@ window.Quarto = {
 <p><code>-</code> cLSTM</p>
 <ul>
 <li>입력 : 전체 시계열 <span class="math inline">\(x_t ∈R^p\)</span></li>
-<li>출력 : 오직 한 변수 <span class="math inline">\(x_{ti}\)</span> 만 예측하는 신경망 <span class="math inline">\(g_i\)</span></li>
+<li>출력 : 오직 <strong>한 변수 <span class="math inline">\(x_{ti}\)</span> 만 예측</strong>하는 신경망 <span class="math inline">\(g_i\)</span></li>
 <li><span class="math inline">\(f_t = \sigma(W_fx_t+U_fh_{t-1})\)</span>(forget gate)</li>
 <li><span class="math inline">\(i_t = \sigma(W_inx_t+U_{in}h_{t-1}\)</span>(input gate)</li>
 <li><span class="math inline">\(o_t = \sigma(W_ox_t+U_oh_{t-1})\)</span>(output gate)</li>
-<li><span class="math inline">\(C_t=f_t \odot C_{t-1}+i_t \odot tanh(W_cx_t + U_ch_{t-1})\)</span></li>
+<li><span class="math inline">\(C_t=f_t \odot C_{t-1}+i_t \odot tanh(W_cx_t + U_ch_{t-1})\)</span> (candidate cell state)</li>
 <li><span class="math inline">\(h_t=o_t\odot tanh(C_t)\)</span></li>
 <li><span class="math inline">\(C_t\)</span> : 셀 상태</li>
 <li><span class="math inline">\(x_t\)</span> : 현재 입력(전체 시계열)</li>
 <li><span class="math inline">\(h_t\)</span> : 현재 hidden state</li>
-<li><span class="math inline">\(W_f, W_in, W_o,W_c\)</span> : 입력 가중치 행렬들</li>
-<li><strong>인과 관계는 이 입력 가중치들(W)을 통해서 표현됨!!</strong></li>
+<li><strong><span class="math inline">\(W_f, W_{in}, W_o,W_c\)</span> : 입력 가중치 행렬들 각각 shape은 h(hidden unnit 수) X p(변수 수)</strong></li>
+<li><strong>인과 관계는 이 입력 가중치들(W : shape 4h x p)을 통해서 표현됨!!</strong></li>
 </ul>
 <p><code>-</code> Granger causality 추론 방법</p>
 <ul>
-<li>시계열 j가 출력 <span class="math inline">\(x_{ti}\)</span>에 영향을 주지 않으려면 입력 가중치 행렬 W의 j번째 column이 모두 0이 되면 됨
+<li>시계열 j가 출력 <span class="math inline">\(x_{ti}\)</span>에 영향을 주지 않으려면 입력 가중치 행렬 <strong>W의 j번째 column이 모두 0이 되면</strong> 됨 <span class="math inline">\(\to\)</span> <strong>Granger 인과하지 않다</strong>
 <ul>
 <li><span class="math inline">\(W_{:,j}=0\)</span> <span class="math inline">\(\to\)</span> 시계열 j는 i의 Granger 원인이 아님</li>
 </ul></li>
-<li>Group Lasso penalty 사용</li>
+<li><strong>Group lasso 주로 사용</strong></li>
 </ul>
 <p><code>-</code> cMLP 와 cLSTM 차이</p>
 <ul>
 <li>cMLP
 <ul>
-<li>고정된 lag(지정 필요)</li>
-<li>계산구조 - 완전 연결 구조</li>
+<li><strong>고정된 lag(지정 필요)</strong></li>
+<li>계산구조 - 완전 연결 구조 <strong>고정된 길이의 과거 시점을 한번에 입력</strong></li>
 <li>첫 층 가중치로 인과 해석</li>
 </ul></li>
 <li>cLSTM
 <ul>
-<li>장기 기억 자동 처리(lag지정 필요없음)</li>
-<li>계산구조 - 순환 구조</li>
+<li>장기 기억 자동 처리 <strong>(lag지정 필요없음)</strong></li>
+<li>계산구조 - 순환 구조 <strong>입력이 시간적으로 순차적으로 들어감</strong></li>
 <li>입력 가중치 W로 인과 해석</li>
 </ul></li>
 </ul>
@@ -391,15 +391,15 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="optimizing-the-penalized-objectives">4. Optimizing the Penalized Objectives</h3>
 <section id="optimizing-the-penalized-cmlp-objective" class="level4">
 <h4 class="anchored" data-anchor-id="optimizing-the-penalized-cmlp-objective">4.1 Optimizing the Penalized cMLP Objective</h4>
-<p><code>-</code> 최적화 방법 : Proximal Gradient Descent (proximal : 중심의)</p>
+<p><code>-</code> 최적화 방법 : <strong>Proximal Gradient Descent</strong> (proximal : 중심의)</p>
 <ul>
-<li>희소성 penalty 미분 불가능 or , 정확이 0이되는 가중치 만들기 어려움 <span class="math inline">\(\to\)</span> sparsity를 정확히 유도하기 어려움</li>
+<li><strong>희소성 penalty 미분 불가능</strong> or , 정확이 0이되는 가중치 만들기 어려움 <span class="math inline">\(\to\)</span> sparsity를 정확히 유도하기 어려움</li>
 <li>Proximal Gradient는 <code>가중치가 딱 0이 되도록</code> 업데이트</li>
 <li>알고리즘 구조
 <ul>
 <li>현재 가중치 <span class="math inline">\(W^m\)</span>에 대해 손실함수 <span class="math inline">\(L(W)\)</span>의 gradient 계산</li>
 <li>gradient만큼 이동(평범한 업데이트)</li>
-<li>proximal 연산(prox)으로 sparsity penalty를 반영한 업데이트(정규화 적용)</li>
+<li><strong>proximal 연산(prox)으로 sparsity penalty를 반영한 업데이트(정규화 적용)</strong></li>
 </ul></li>
 <li>prox 연산은 각 penalty종류에 따라 다르게 정의
 <ul>
@@ -411,8 +411,8 @@ window.Quarto = {
 <p><code>-</code> Soft-thresholding</p>
 <ul>
 <li>어떤 값 x에 대해 정규화 항을 적용한 후,</li>
-<li>절댓값이 작으면 0이 됨(가중치 제거)</li>
-<li>크면 그 크기만큼 줄어듦(패널티에 의한 수축)</li>
+<li><strong>절댓값이 작으면 0</strong>이 됨(가중치 제거)</li>
+<li><strong>크면 그 크기만큼 줄어듦</strong>(패널티에 의한 수축)</li>
 </ul>
 <p><span class="math display">\[
 S_{\lambda}(x) =
@@ -426,19 +426,12 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <section id="optimizing-the-penalized-clstm-objective" class="level4">
 <h4 class="anchored" data-anchor-id="optimizing-the-penalized-clstm-objective">4.2 Optimizing the Penalized cLSTM Objective</h4>
 <p><code>-</code> 최적화 방법 : 마찬가지로 미분 불가능하기 때문에 Proximal Gradient Descent</p>
-<p><code>-</code> 구체적 학습 방법</p>
+<p><code>-</code> 학습 방법</p>
 <ul>
-<li>Backpropagation Through Time(BPTT)로 gradient 계산
+<li><strong>Backpropagation Through Time(BPTT)로 gradient 계산(모든시점에 대해 그래디언트 계산)</strong>
 <ul>
 <li>LSTM은 시간 축으로 펼쳐야 하니까 이걸 사용</li>
-<li>시계열 길이가 길경우에 truncated BPTT사용 <span class="math inline">\(\to\)</span> 길게 펼치지 않고 적당히 잘라서 계산</li>
-</ul></li>
-<li>학습 알고리즘
-<ul>
-<li>현재 가중치 <span class="math inline">\(W^m\)</span>에 대해 gradient 계산</li>
-<li>step size <span class="math inline">\(\gamma\)</span> 결정</li>
-<li>입력가중치 <span class="math inline">\(W^1_{:,j}\)</span> 에 대해 soft-threshold적용</li>
-<li>나머지 파라미터(출력층 <span class="math inline">\(W^2\)</span>, 은닉 상태 관련 <span class="math inline">\(U\)</span>)는 일반 gradient 업데이트</li>
+<li>시계열 길이가 <strong>길경우에 truncated BPTT사용</strong> <span class="math inline">\(\to\)</span> 길게 펼치지 않고 <strong>적당히 잘라서</strong> 계산</li>
 </ul></li>
 </ul>
 </section>
@@ -449,12 +442,12 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <ul>
 <li>cMLP
 <ul>
-<li>최대 <code>lag</code> K를 명시적으로 지정</li>
-<li>하지만 hierarchical penalty 덕분에 불필요한 lag는 자동 제거</li>
+<li><strong>최대 <code>lag</code> K를 명시적</strong>으로 지정</li>
+<li>하지만 hierarchical penalty 덕분에 <strong>불필요한 lag는 자동 제거</strong></li>
 </ul></li>
 <li>cLSTM
 <ul>
-<li>lag지정할 필요 없음</li>
+<li><strong>lag지정할 필요 없음</strong></li>
 <li>LSTM 내부 구조가 장기 의존성 자동 처리</li>
 </ul></li>
 </ul>
@@ -466,11 +459,11 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 </ul></li>
 <li>cLSTM
 <ul>
-<li>cLSTM은 한 시점 전부터 사용 가능하므로 T-1ro epdlxj tkdyd rksmd</li>
+<li>cLSTM은 한 시점 전부터 사용 가능하므로 T-1개 데이터 사용 가능</li>
 <li><span class="math inline">\(\to\)</span> 작은 데이터셋에서는 cLSTM이 상대적으로 더 많은 학습데이터 활용 가능</li>
 </ul></li>
 </ul>
-<p><code>-</code> 희소성의 의미</p>
+<p><code>-</code> sparsity penalty</p>
 <ul>
 <li>둘 다 입력 가중치에 정규화를 걸어 Granger 인과성 없음 <span class="math inline">\(\to\)</span> 가중치 0 유도</li>
 </ul>
@@ -478,11 +471,11 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <ul>
 <li>cMLP
 <ul>
-<li>lag지정 잘못되면 성능 저하</li>
+<li><strong>lag지정 잘못되면 성능 저하</strong></li>
 </ul></li>
 <li>cLSTM
 <ul>
-<li>해석력은 좋으나 내부 구조 해석은 다소 복잡</li>
+<li>해석력은 좋으나 <strong>내부 구조</strong> 해석은 다소 <strong>복잡</strong></li>
 </ul></li>
 </ul>
 </section>
@@ -492,11 +485,11 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <h4 class="anchored" data-anchor-id="cmlp-and-clstm-simulation-comparison">6.1 cMLP and cLSTM Simulation Comparison</h4>
 <p><code>-</code> 목적</p>
 <ul>
-<li>두 모델이 선형 및 비선형 시계열에서 Granger 인과 그래프를 얼마나 잘 복원하는지</li>
+<li><strong>두 모델</strong>이 <strong>선형 및 비선형</strong> 시계열에서 <strong>Granger 인과 그래프</strong>를 <strong>얼마나 잘 복원하는지</strong></li>
 <li>사용한 시뮬레이션 데이터
 <ul>
-<li>Lorenz-95 모델 : 비선형, 복잡한 시스템</li>
-<li>VAR(Vector AutoRegressive)모델 : 선형구조</li>
+<li><strong>Lorenz-95</strong> 모델 : <strong>비선형</strong>, 복잡한 시스템</li>
+<li><strong>VAR</strong>(Vector AutoRegressive)모델 : <strong>선형구조</strong></li>
 </ul></li>
 </ul>
 <section id="lorenz-96-모델-실험" class="level5">
@@ -506,12 +499,25 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <li><span class="math inline">\(\frac{dx_{ti}}{dt}=(x_{t(i+1)}-x_{t(i-2)})x_{t(i-1)}-x_{ti}+F\)</span></li>
 <li>F : 혼란스러움 조절 파라미터 <span class="math inline">\(F∈\{10,40\}\)</span>
 <ul>
-<li>F=10 : 덜 복잡</li>
-<li>F=40 : 더 chaotic</li>
+<li><strong>F=10 : 덜 복잡</strong></li>
+<li><strong>F=40 : 더 chaotic</strong></li>
 </ul></li>
 <li>차원(변수 개수) <span class="math inline">\(p=20\)</span>, 시계열 길이 <span class="math inline">\(T∈\{250,500,1000\}\)</span></li>
-<li>cMLP 시차 lag K=5, hierarchical penalty 사용</li>
+<li>cMLP 모델은 시차 lag K=5, hierarchical penalty 사용</li>
 <li>각 설정마다 5번 반복하고 평균을 냈음</li>
+<li><strong>평가 방식: (AUROC)</strong>
+<ul>
+<li>실제 인과구조 GC 와 예측해낸 인과구조 GC_est가 얼마나 유사한가</li>
+<li>1: Granger 인과성 존재, 0: Granger 인과성 없음</li>
+<li>변수 <span class="math inline">\(p\)</span>개면 <span class="math inline">\(p^2\)</span> 만큼의 인과쌍(자기 자신 제외하면 <span class="math inline">\(p^2-p\)</span>)</li>
+<li><span class="math inline">\(p^2-p\)</span> 에 대한 AUROC
+<ul>
+<li>AUROC : treshold를 다양하게 바꿔가며</li>
+<li>x축 1-특이도 : False positive rate</li>
+<li>y축 민감도 : True positive rate</li>
+<li>로 그린 ROC curve의 아래면적</li>
+</ul></li>
+</ul></li>
 </ul>
 <table class="caption-top table">
 <thead>
@@ -525,9 +531,9 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <tbody>
 <tr class="odd">
 <td>cMLP (F=10)</td>
-<td>86.6</td>
-<td>96.6</td>
-<td>98.4</td>
+<td><strong>86.6</strong></td>
+<td><strong>96.6</strong></td>
+<td><strong>98.4</strong></td>
 </tr>
 <tr class="even">
 <td>cLSTM (F=10)</td>
@@ -537,9 +543,9 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 </tr>
 <tr class="odd">
 <td>cMLP (F=40)</td>
-<td>84.0</td>
-<td>89.6</td>
-<td>95.5</td>
+<td><strong>84.0</strong></td>
+<td><strong>89.6</strong></td>
+<td><strong>95.5</strong></td>
 </tr>
 <tr class="even">
 <td>cLSTM (F=40)</td>
@@ -551,15 +557,15 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 </table>
 <ul>
 <li>전반적으로 <strong>cMLP</strong>가 높은 정확도 <strong>(AUROC)-Grangr 인과구조 복원 정확도</strong> 를 보임</li>
-<li>데이터가 많아질수록 성능이 비슷해짐</li>
+<li><strong>데이터가 많아질수록 성능이 비슷해짐</strong></li>
 </ul>
 </section>
 <section id="var-모델-실험" class="level5">
 <h5 class="anchored" data-anchor-id="var-모델-실험">6.1.2 VAR 모델 실험</h5>
 <ul>
-<li>Granger 인과 구조가 정확히 정의된 데이터셋 생성</li>
-<li>모델 생성시 lag 1 , lag 2 두가지 생성 VAR(1), VAR(2)</li>
-<li>선형 시계열 모델, 각 시계열이 다른 시계열들의 과거값에 선형적으로 영향을 받음</li>
+<li><strong>Granger 인과 구조가 정확히 정의된 데이터셋</strong> 생성</li>
+<li>모델 생성시 <strong>실제</strong> lag가 lag <strong>1</strong> , lag <strong>2</strong>인 두가지 데이터 생성 <strong>VAR(1), VAR(2)</strong></li>
+<li><strong>선형 시계열 모델</strong>, 각 시계열이 다른 시계열들의 과거값에 선형적으로 영향을 받음</li>
 <li><span class="math inline">\(x_t = A_1x_{t-1}+A_2x_{t-2}+...+A_kx_{t-k}+\epsilon_t\)</span></li>
 <li><span class="math inline">\(A_k\)</span> : 계수 행렬</li>
 <li>차원 <span class="math inline">\(p=10\)</span>, 시계열 길이 <span class="math inline">\(T∈\{250,500,1000\}\)</span></li>
@@ -589,10 +595,10 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <tbody>
 <tr class="odd">
 <td><strong>cMLP</strong></td>
-<td>91.6</td>
+<td><strong>91.6</strong></td>
 <td>94.9</td>
 <td>98.4</td>
-<td>84.4</td>
+<td><strong>84.4</strong></td>
 <td>88.3</td>
 <td>95.1</td>
 </tr>
@@ -602,20 +608,20 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <td>93.4</td>
 <td>97.6</td>
 <td>83.5</td>
-<td>92.5</td>
-<td>97.8</td>
+<td><strong>92.5</strong></td>
+<td><strong>97.8</strong></td>
 </tr>
 </tbody>
 </table>
 <ul>
 <li>둘다 매우 높은 정확도, T가 클수록 성능 향상</li>
-<li>적은 데이터일수록 cMLP가 안정적으로 좋음</li>
-<li>데이터가 많으면 cLSTM이 좋을 때도 있음</li>
+<li><strong>적은 데이터</strong>일수록 <strong>cMLP가 안정적</strong>으로 좋음</li>
+<li><strong>데이터가 많으면 cLSTM이 좋을 때도</strong> 있음</li>
 </ul>
 <p><code>-</code> 해석</p>
 <ul>
-<li>VAR은 선형 구조이므로 cMLP가 더 적합한 구조</li>
-<li>LSTM은 비선형성 + 복잡한 Long-term 구조 학습에 강하지만 단순 선형 시계열에서는 오버피팅이 일어날 수도 있음</li>
+<li>VAR은 <strong>선형 구조</strong>이므로 <strong>cMLP가 더 적합</strong>한 구조</li>
+<li>LSTM은 비선형성 + 복잡한 Long-term 구조 학습에 강하지만 <strong>단순 선형 시계열에서는 오버피팅</strong>이 일어날 수도 있음</li>
 <li>결론 : Granger인과 구조가 명확하고 선형적인 경우 <strong>cMLP가 더 정확하고 빠르게 복원가능</strong></li>
 </ul>
 </section>
@@ -624,9 +630,10 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <h4 class="anchored" data-anchor-id="quantitative-analysis-of-the-hierarchical-penalty">6.2 Quantitative Analysis of the Hierarchical penalty</h4>
 <p><code>-</code> 목적</p>
 <ul>
-<li>Hierarchical Group Lasso penalty가 lag 선택과 Granger 인과관계 복원에 어떤영향을 주는지 정량적 평가하기 위한 실험</li>
+<li><strong>Hierarchical Group Lasso penalty</strong>가 <strong>lag 선택</strong>과 <strong>Granger 인과관계 복원</strong>에 어떤영향을 주는지 정량적 평가하기 위한 실험</li>
 <li>Lorenz-95 시뮬레이션 데이터 사용</li>
-<li>입력 lag수 K를 다르게 설정하여 세가지 패널티 방식 비교</li>
+<li><strong>입력 lag수 K를 다르게</strong> 설정하여 세가지 패널티 방식 비교</li>
+<li>모델 : <strong>cMLP</strong></li>
 </ul>
 <table class="caption-top table">
 <thead>
@@ -660,11 +667,11 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 </table>
 <p><code>-</code> 결과해석</p>
 <ul>
-<li>GROUP 과 MIXED는 <code>lag</code>가 커질수록 성능 떨어짐
+<li><strong>GROUP</strong> 과 <strong>MIXED</strong>는 <code>lag</code>가 <strong>커질수록 성능 떨어짐</strong>
 <ul>
 <li>overfitting 또는 noise</li>
 </ul></li>
-<li>HIER은 거의 떨어지지 않음
+<li><strong>HIER</strong>은 <strong>거의 떨어지지 않음</strong>
 <ul>
 <li><span class="math inline">\(\to\)</span> lag가 커도 불필요한 lag를 자동으로 제거</li>
 <li>최적 lag 수를 지정할 필요 없어짐</li>
@@ -676,26 +683,26 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <h3 class="anchored" data-anchor-id="dream-challenge">7. DREAM challenge</h3>
 <p><code>-</code> 목표</p>
 <ul>
-<li>cMLP + 정규화 를 통해 유전자 발현 시계열 데이터로부터 유전자 간 조절 네트워크를 복원할 수 있는지 평가</li>
+<li>cMLP + 정규화 를 통해 유전자 발현 시계열 데이터로부터 <strong>유전자 간 조절 네트워크를 복원</strong>할 수 있는지 평가</li>
 </ul>
 <p><code>-</code> 데이터셋 : DREAM3 simulation</p>
 <ul>
-<li>비선형 동역학 + 은닉 변수 포함 <span class="math inline">\(\to\)</span> Granger추정 매우 어려움</li>
-<li>5개의 시뮬레이션 데이터셋 <span class="math inline">\(\to\)</span> 각각 다른 실제 Granger 인과 그래프 존재</li>
+<li><strong>비선형</strong> 동역학 + 은닉 변수 포함 <span class="math inline">\(\to\)</span> Granger추정 매우 어려움</li>
+<li><strong>5개</strong>의 시뮬레이션 <strong>데이터셋</strong> <span class="math inline">\(\to\)</span> 각각 다른 실제 Granger 인과 그래프 존재</li>
 <li>2개는 대장균 데이터..3개는 효모 데이터..</li>
-<li>각 세트는 p=100개의 유전자 + 21시점에서 각시계열 46번 독립적인 반복추정 : 총시점 -966</li>
+<li>각 세트는 p=100개의 유전자 + 21시점에서 각시계열 46번 독립적인 반복추정 : <strong>총시점 - 966</strong></li>
 <li>유전자 사이의 실제 조절네트워크(정답)제공</li>
 </ul>
 <p><code>-</code> 실험 설정</p>
 <ul>
-<li>사용 모델 : cMLP</li>
-<li>lag : K = 5</li>
-<li>희소성 정규화 : Hierarchical Group Lasso</li>
-<li>평가 : AUROC</li>
+<li>사용 모델 : <strong>cMLP</strong></li>
+<li>lag : <strong>K = 5</strong></li>
+<li>희소성 정규화 : <strong>Hierarchical Group Lasso</strong></li>
+<li>평가 : <strong>AUROC</strong></li>
 </ul>
 <p><code>-</code> 결과</p>
 <ul>
-<li>매우 복잡하고 비선형적인 데이터임에도 불구하고 중요한 인과 연결들을 거의 정확히 복원</li>
+<li><strong>매우 복잡하고 비선형적인 데이터임에도 불구하고</strong> <strong>중요한 인과 연결들을 거의 정확히 복원</strong></li>
 <li>lag가 중요한 경우에도 hierarchical penalty가 자동으로 lag 선택</li>
 </ul>
 <p><img src="python_project/3-1/ML/ML2025/posts/chart.png" class="img-fluid"></p>
@@ -703,39 +710,38 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 <h4 class="anchored" data-anchor-id="dependencies-in-human-motion-capture">8. Dependencies in human motion capture</h4>
 <p><code>-</code> 목적</p>
 <ul>
-<li>실제 인간의 움직임 데이터를 이용해 Neural Granger Causality 모델들이 신체 부위 간의 비선형적, 장기적 인과관계를 복원해보는 실험 <span class="math inline">\(\to\)</span> 현실 데이터에서 잘 작동하는지 확인</li>
+<li><strong>실제 인간의 움직임</strong> 데이터를 이용해 Neural Granger Causality 모델들이 <strong>신체 부위 간의 비선형적, 장기적 인과관계를 복원</strong>해보는 실험 <span class="math inline">\(\to\)</span> <code>현실 데이터에서 잘 작동하는지 확인</code></li>
 </ul>
 <p><code>-</code> 분석하고자 한 것</p>
 <ul>
-<li>우리가 알고 있는 신체의 구조적 연결(관절 간 영향)과</li>
-<li>모델이 학습한 Granger 인과 구조가 유사한지 비교</li>
+<li><code>우리가 알고 있는 신체의 구조적 연결</code>(관절 간 영향)과</li>
+<li>모델이 학습한 <code>Granger 인과 구조가 유사한지 비교</code></li>
 </ul>
 <p><code>-</code> 데이터 : MoCap(Motion Capture)</p>
 <ul>
 <li>한 사람의 걷는 동작을 포착한 데이터</li>
 <li>24개의 고유한 신체 부위</li>
-<li>여러 자유도로 측정하여 p=54개의 관절의 각도 및 신체 위치 시계열로 구성됨</li>
-<li>T = 2024개의 시점</li>
+<li>여러 자유도로 측정하여 <strong>p=54</strong>개의 관절의 각도 및 신체 위치 시계열로 구성됨</li>
+<li><strong>T = 2024</strong>개의 시점</li>
 </ul>
 <p><code>-</code> 실험 설정</p>
 <ul>
-<li>모델 : cLSTM</li>
-<li>은닉 유닛 수 : H</li>
-<li>희소성 정규화 : Hierarchical Group Lasso ?</li>
-<li>입력분할 : 전체 시계열 길이를 20짜리 조각으로 나누어 학습()</li>
+<li>모델 : <strong>cLSTM</strong></li>
+<li>은닉 유닛 수 : <strong>H=8</strong></li>
+<li>입력분할 : 전체 시계열 길이를 <strong>20짜리 조각으로 나누어</strong> 학습</li>
 </ul>
 <p><code>-</code> 결과 분석</p>
 <ul>
 <li><span class="math inline">\(\lambda\)</span>에 값에 따라 그래프를 그림</li>
-<li>saprsity가 강해질수록 연결이 줄어들고 핵심 인과구조만 남음</li>
-<li><span class="math inline">\(\lambda\)</span> 40까지 키웠을 때 남은 결과
+<li><strong>saprsity가 강해</strong>질수록 연결이 줄어들고 <strong>핵심 인과구조만 남음</strong></li>
+<li><span class="math inline">\(\lambda\)</span> <strong>40까지 키웠을 때 남은 결과</strong>
 <ul>
 <li>양쪽 무릎 간 상호작용(오른쪽 무릎 <span class="math inline">\(\to\)</span> 왼쪽 무릎, 왼쪽 무릎 <span class="math inline">\(\to\)</span> 오른쪽 무릎)</li>
 <li>팔 <span class="math inline">\(\to\)</span> 팔꿈치 <span class="math inline">\(\to\)</span> 손</li>
 <li>손 <span class="math inline">\(\leftrightarrow\)</span> 발 (ex: 발 끝이 닿는 동작 등에서 둘 사이의 인과)</li>
 <li>몸통 중심 <span class="math inline">\(\to\)</span> 사지 (몸의 움직임이 전체 팔다리로 전파)</li>
 </ul></li>
-<li>시계열 기반 비선형 구조 학습이 실제 사람 움직임 분석에도 효과적이다</li>
+<li>시계열 기반 비선형 구조 학습이 <strong>실제 사람 움직임 분석에도 효과적</strong>이다</li>
 </ul>
 </section>
 </section>
@@ -759,12 +765,12 @@ x + \lambda &amp; \text{if } x &lt; -\lambda
 </ul>
 <p><code>-</code> 향후 연구 방향</p>
 <ul>
-<li>구조화된 정규화 탐색
+<li><strong>구조화된 정규화</strong> 탐색
 <ul>
 <li>hierarchical group lasso 를 최초로 신경망에 도입</li>
-<li>트리구조, 네트워크 구조의 penalty 적용해볼 수도</li>
+<li><strong>트리구조, 네트워크 구조의 penalty 적용해볼 수도</strong></li>
 </ul></li>
-<li>더 강력한 모델로 확장가능
+<li><strong>더 강력한 모델로 확장</strong>가능
 <ul>
 <li>MLP,LSTM 처럼 기초구조만 사용했지만 다른 딥러닝 모델로 확장가능</li>
 </ul></li>
